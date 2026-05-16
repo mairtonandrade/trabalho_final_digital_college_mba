@@ -109,5 +109,7 @@ def seed_demo_data():
         db.close()
 
     from app.seed_demo_historico import seed_historico_demo
+    from app.seed_cenarios_fraude import seed_catalogo_fraude
 
     seed_historico_demo(force=False)
+    seed_catalogo_fraude(force=False)
