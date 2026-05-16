@@ -1,10 +1,18 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { RoleProvider, useRole } from './context/RoleContext'
+import { useEffect } from 'react'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import ErrorBoundary from './components/ErrorBoundary'
+import { RoleProvider, useRole, type Role } from './context/RoleContext'
 import Home from './pages/Home'
 import Analista from './pages/Analista'
 import Gerente from './pages/Gerente'
 import Diretoria from './pages/Diretoria'
 import Guia from './pages/Guia'
+
+const PATH_TO_ROLE: Record<string, Role> = {
+  analista: 'analista',
+  gerente: 'gerente',
+  diretoria: 'diretoria',
+}
 
 function ProtectedRoute({
   children,
@@ -13,9 +21,18 @@ function ProtectedRoute({
   children: React.ReactNode
   allowed: 'analista' | 'gerente' | 'diretoria'
 }) {
-  const { role } = useRole()
-  if (!role) return <Navigate to="/" replace />
-  if (role !== allowed) return <Navigate to="/" replace />
+  const { role, setRole } = useRole()
+  const location = useLocation()
+  const segment = location.pathname.replace(/^\//, '')
+  const roleFromPath = PATH_TO_ROLE[segment]
+
+  useEffect(() => {
+    if (!role && roleFromPath) setRole(roleFromPath)
+  }, [role, roleFromPath, setRole])
+
+  const effective = role || roleFromPath
+  if (!effective) return <Navigate to="/" replace />
+  if (effective !== allowed) return <Navigate to="/" replace />
   return <>{children}</>
 }
 
@@ -55,10 +72,12 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <RoleProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </RoleProvider>
+    <ErrorBoundary>
+      <RoleProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </RoleProvider>
+    </ErrorBoundary>
   )
 }

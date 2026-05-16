@@ -1,5 +1,13 @@
 # 04 — Deploy no Netlify
 
+## Por que a tela ficava em branco?
+
+No Netlify, sem `VITE_API_URL`, as chamadas iam para `/api/...` e o Netlify devolvia o `index.html` (redirect SPA). O app quebrava ao processar HTML como JSON.
+
+**Correção:** o build em produção **sem** `VITE_API_URL` ativa o **modo demonstração** (dados de exemplo embutidos). Os perfis abrem normalmente.
+
+Para dados reais do backend, configure `VITE_API_URL` e faça redeploy.
+
 ## Frontend (Netlify)
 
 1. Conecte o repositório GitHub no [Netlify](https://app.netlify.com)

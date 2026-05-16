@@ -3,6 +3,11 @@
   command = "npm run build"
   publish = "dist"
 
+# Sem VITE_API_URL o build ativa modo demonstração (dados de exemplo).
+# Com API hospedada: VITE_API_URL=https://sua-api.com/api
+[build.environment]
+  NODE_VERSION = "20"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

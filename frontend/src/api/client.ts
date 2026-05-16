@@ -1,8 +1,41 @@
-import axios from 'axios'
+import axios, { type InternalAxiosRequestConfig } from 'axios'
+import { isDemoMode } from './apiConfig'
+import { resolveDemoResponse } from './demoResolver'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
+  timeout: 120000,
 })
+
+function isHtmlPayload(data: unknown): boolean {
+  if (typeof data !== 'string') return false
+  const s = data.trim().toLowerCase()
+  return s.startsWith('<!doctype') || s.startsWith('<html')
+}
+
+api.interceptors.response.use(
+  (response) => {
+    const ct = String(response.headers['content-type'] || '')
+    if (ct.includes('text/html') || isHtmlPayload(response.data)) {
+      return Promise.reject(
+        new Error('API indisponível — configure VITE_API_URL no Netlify ou use modo demo.')
+      )
+    }
+    return response
+  },
+  (error) => Promise.reject(error)
+)
+
+if (isDemoMode()) {
+  api.defaults.adapter = (config: InternalAxiosRequestConfig) =>
+    Promise.resolve({
+      data: resolveDemoResponse(config),
+      status: 200,
+      statusText: 'OK',
+      headers: { 'content-type': 'application/json' },
+      config,
+    })
+}
 
 export interface ContaBancaria {
   id: number

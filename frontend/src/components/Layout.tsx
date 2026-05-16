@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import ApiBanner from './ApiBanner'
 import { useRole } from '../context/RoleContext'
 
 const roleLabels: Record<string, string> = {
@@ -89,7 +90,10 @@ export default function Layout({
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">{children}</main>
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+        <ApiBanner />
+        {children}
+      </main>
 
       <footer className="border-t border-white/5 py-6 mt-auto">
         <p className="text-center text-xs text-slate-600 max-w-7xl mx-auto px-4">
