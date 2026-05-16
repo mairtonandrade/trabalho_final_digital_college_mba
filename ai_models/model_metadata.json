@@ -1,0 +1,15 @@
+{
+  "features": [
+    "amount",
+    "balance_diff",
+    "hour_risk",
+    "velocity_proxy",
+    "nao_cadastrado",
+    "valor_sobre_saldo"
+  ],
+  "f1_score": 0.8451740730257572,
+  "auc_score": 0.9394539504651468,
+  "source": "synthetic",
+  "threshold_fraude": 0.55,
+  "algoritmo": "XGBoost"
+}

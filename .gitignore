@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+venv_mba/
+backend/venv_mba/
+backend/data/*
+!backend/data/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+*.db
+
+# Node
+node_modules/
+frontend/dist/
+frontend/.env
+
+# ML / Data
+ai_models/*.pkl
+ai_models/*.csv
+.kaggle/
+
+# IDE / OS
+.env
+.DS_Store
+.idea/
+.vscode/

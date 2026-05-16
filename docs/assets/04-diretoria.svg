@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0b0f1a"/>
+  <rect x="0" y="0" width="960" height="56" fill="#020617" stroke="#1e293b"/>
+  <text x="24" y="36" fill="#34d399" font-family="Segoe UI,sans-serif" font-size="12" font-weight="600">DIRETORIA</text>
+  <rect x="24" y="80" width="170" height="90" rx="12" fill="#121829" stroke="#334155"/>
+  <rect x="210" y="80" width="170" height="90" rx="12" fill="#121829" stroke="#334155"/>
+  <rect x="396" y="80" width="170" height="90" rx="12" fill="#121829" stroke="#334155"/>
+  <rect x="582" y="80" width="170" height="90" rx="12" fill="#121829" stroke="#334155"/>
+  <rect x="768" y="80" width="168" height="90" rx="12" fill="#121829" stroke="#334155"/>
+  <text x="109" y="120" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI,sans-serif" font-size="10">Saldo total</text>
+  <text x="109" y="145" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700">R$ 1,8M</text>
+  <text x="295" y="120" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI,sans-serif" font-size="10">Remessas</text>
+  <text x="295" y="145" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="14" font-weight="700">25</text>
+  <rect x="24" y="190" width="450" height="310" rx="16" fill="#121829" stroke="#334155"/>
+  <text x="44" y="225" fill="white" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600">Detecções IA</text>
+  <rect x="44" y="250" width="410" height="40" rx="6" fill="#7f1d1d" opacity="0.3" stroke="#ef4444"/>
+  <rect x="44" y="300" width="410" height="40" rx="6" fill="#422006" opacity="0.3" stroke="#f59e0b"/>
+  <rect x="494" y="190" width="442" height="310" rx="16" fill="#121829" stroke="#334155"/>
+  <text x="514" y="225" fill="white" font-family="Segoe UI,sans-serif" font-size="13" font-weight="600">Auditoria WORM</text>
+</svg>

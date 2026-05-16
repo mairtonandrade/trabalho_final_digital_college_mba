@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
+  <rect width="960" height="540" fill="#0b0f1a"/>
+  <rect x="0" y="0" width="960" height="56" fill="#020617" stroke="#1e293b"/>
+  <text x="24" y="36" fill="#34d399" font-family="Segoe UI,sans-serif" font-size="12" font-weight="600">ANALISTA</text>
+  <text x="200" y="36" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="12">Remessas · Guia</text>
+  <rect x="24" y="80" width="560" height="420" rx="16" fill="#121829" stroke="#334155"/>
+  <text x="44" y="115" fill="white" font-family="Segoe UI,sans-serif" font-size="16" font-weight="600">Remessas e pagamentos</text>
+  <text x="44" y="138" fill="#64748b" font-family="Segoe UI,sans-serif" font-size="11">Monte a remessa e envie para IA em lote</text>
+  <rect x="44" y="160" width="200" height="36" rx="8" fill="#064e3b" stroke="#10b981"/>
+  <text x="144" y="183" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI,sans-serif" font-size="11">+ Nova remessa</text>
+  <rect x="44" y="220" width="520" height="48" rx="8" fill="#0f172a" stroke="#475569"/>
+  <text x="60" y="250" fill="#e2e8f0" font-family="Segoe UI,sans-serif" font-size="12">Remessa #26  aguardando envio IA</text>
+  <rect x="44" y="290" width="520" height="180" rx="8" fill="#0f172a" stroke="#475569"/>
+  <text x="60" y="320" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="11">Pagamento PJ · R$ 45.200,00</text>
+  <text x="60" y="345" fill="#94a3b8" font-family="Segoe UI,sans-serif" font-size="11">Pagamento PJ · R$ 12.800,00</text>
+  <rect x="60" y="400" width="160" height="32" rx="8" fill="url(#g2)"/>
+  <text x="140" y="420" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="11" font-weight="600">Enviar para IA</text>
+  <rect x="608" y="80" width="328" height="200" rx="16" fill="#121829" stroke="#334155"/>
+  <text x="628" y="115" fill="white" font-family="Segoe UI,sans-serif" font-size="13">Cadastros</text>
+  <rect x="608" y="300" width="328" height="200" rx="16" fill="#121829" stroke="#334155"/>
+  <text x="628" y="335" fill="white" font-family="Segoe UI,sans-serif" font-size="13">Contas bancárias</text>
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#059669"/><stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+  </defs>
+</svg>
