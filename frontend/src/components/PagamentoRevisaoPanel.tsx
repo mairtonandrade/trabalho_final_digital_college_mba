@@ -42,6 +42,15 @@ export default function PagamentoRevisaoPanel({
     }
   }
 
+  if (!pagamento.ia_analisado) {
+    return (
+      <p className="text-amber-400 text-xs mt-2 border border-amber-800/50 p-2 rounded">
+        Revisão bloqueada até a conclusão da análise IA (ML + GenAI). A Diretoria registra cada
+        detecção na trilha executiva.
+      </p>
+    )
+  }
+
   if (pagamento.revisado_gerente) {
     return (
       <p className="text-emerald-400 text-xs mt-2 border border-emerald-800/40 p-2 rounded">

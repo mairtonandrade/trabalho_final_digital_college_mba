@@ -11,6 +11,8 @@ import {
 import Layout from '../components/Layout'
 import PageHeader from '../components/ui/PageHeader'
 import ContasPanel from '../components/ContasPanel'
+import HistoricoControleIA from '../components/HistoricoControleIA'
+import PainelGraficosIA from '../components/PainelGraficosIA'
 import PagamentoDetalheModal from '../components/PagamentoDetalheModal'
 import RiskBadge from '../components/RiskBadge'
 import {
@@ -20,6 +22,8 @@ import {
   type PagamentoNaoCadastrado,
   type PagamentoPFNaoCadastrado,
   type DeteccaoIA,
+  type HistoricoControleIAResponse,
+  type MetricasIAResponse,
   type PontoAtencao,
 } from '../api/client'
 
@@ -45,6 +49,8 @@ export default function Diretoria() {
   const [pontosAtencao, setPontosAtencao] = useState<PontoAtencao[]>([])
   const [detalhePagamentoId, setDetalhePagamentoId] = useState<number | null>(null)
   const [deteccoes, setDeteccoes] = useState<DeteccaoIA[]>([])
+  const [historicoIA, setHistoricoIA] = useState<HistoricoControleIAResponse | null>(null)
+  const [metricasIA, setMetricasIA] = useState<MetricasIAResponse | null>(null)
 
   useEffect(() => {
     Promise.all([
@@ -55,8 +61,10 @@ export default function Diretoria() {
       apiClient.pagamentosPFNaoCadastrados(),
       apiClient.pontosAtencao(),
       apiClient.deteccoesIA(),
+      apiClient.historicoControleIA(150),
+      apiClient.metricasIA(6),
     ])
-      .then(([k, a, al, nc, pf, pa, det]) => {
+      .then(([k, a, al, nc, pf, pa, det, hist, met]) => {
         setKpis(k.data)
         setLogs(Array.isArray(a.data) ? a.data : [])
         setAlertas(Array.isArray(al.data) ? al.data : [])
@@ -64,10 +72,14 @@ export default function Diretoria() {
         setPfNaoCad(Array.isArray(pf.data) ? pf.data : [])
         setPontosAtencao(Array.isArray(pa.data) ? pa.data : [])
         setDeteccoes(Array.isArray(det.data) ? det.data : [])
+        setHistoricoIA(hist.data)
+        setMetricasIA(met.data)
       })
       .catch(() => {
         setLogs([])
         setDeteccoes([])
+        setHistoricoIA(null)
+        setMetricasIA(null)
       })
   }, [])
 
@@ -83,7 +95,14 @@ export default function Diretoria() {
     <Layout title="Dashboard Executivo — Diretoria">
       <PageHeader
         title="Visão executiva"
-        subtitle="KPIs consolidados, detecções de IA e trilha de auditoria dos últimos 6 meses de operação."
+        subtitle="Controle total dos fluxos financeiros: histórico de tudo que a IA detectou nos perfis Analista e Gerente, com trilha para questionamentos."
+      />
+
+      <PainelGraficosIA data={metricasIA} />
+
+      <HistoricoControleIA
+        data={historicoIA}
+        onVerPagamento={(id) => setDetalhePagamentoId(id)}
       />
       {kpis && (
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">

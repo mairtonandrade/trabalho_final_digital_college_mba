@@ -5,6 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import AuditLog, ContaBancaria, Fornecedor, Pagamento, PagamentoAnaliseIA, Remessa
 from app.schemas import AuditLogOut, DashboardKPIs, PontoAtencaoOut
+from app.services.dashboard_historico import historico_controle_ia
+from app.services.dashboard_ia_metrics import metricas_ia_diretoria
 from app.services.pagamento_out import build_pagamento_out
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
@@ -53,7 +55,22 @@ def kpis(db: Session = Depends(get_db)):
 
 @router.get("/auditoria", response_model=list[AuditLogOut])
 def logs_auditoria(db: Session = Depends(get_db)):
-    return db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(100).all()
+    return db.query(AuditLog).order_by(AuditLog.created_at.desc()).limit(200).all()
+
+
+@router.get("/metricas-ia")
+def metricas_ia_endpoint(db: Session = Depends(get_db), meses: int = 6):
+    """Gráficos executivos: detecções IA por perfil, mês e tipo."""
+    return metricas_ia_diretoria(db, meses=min(max(meses, 3), 12))
+
+
+@router.get("/historico-controle-ia")
+def historico_controle_ia_endpoint(db: Session = Depends(get_db), limit: int = 150):
+    """
+    Histórico completo para a Diretoria: detecções IA + fluxo Analista/Gerente/Sistema
+    por pagamento, com linha do tempo e versões de reanálise.
+    """
+    return historico_controle_ia(db, limit=min(limit, 300))
 
 
 @router.get("/deteccoes-ia")
@@ -69,7 +86,7 @@ def deteccoes_ia(db: Session = Depends(get_db)):
             | (Pagamento.pf_nao_cadastrado == 1),
         )
         .order_by(Pagamento.created_at.desc())
-        .limit(50)
+        .limit(150)
         .all()
     )
     result = []
@@ -79,7 +96,6 @@ def deteccoes_ia(db: Session = Depends(get_db)):
             db.query(PagamentoAnaliseIA)
             .filter(PagamentoAnaliseIA.pagamento_id == p.id)
             .order_by(PagamentoAnaliseIA.versao.desc())
-            .limit(5)
             .all()
         )
         result.append(
@@ -87,6 +103,7 @@ def deteccoes_ia(db: Session = Depends(get_db)):
                 "pagamento_id": p.id,
                 "codigo_pagamento": f"PAY-{p.id:06d}",
                 "remessa_id": p.remessa_id,
+                "remessa_titulo": rem.titulo if rem else None,
                 "remessa_status": rem.status if rem else None,
                 "valor": p.valor,
                 "beneficiario_nome": p.beneficiario_nome,
@@ -103,7 +120,9 @@ def deteccoes_ia(db: Session = Depends(get_db)):
                         "versao": h.versao,
                         "triggered_by": h.triggered_by,
                         "ml_fraude_detectada": bool(h.ml_fraude_detectada),
+                        "ml_score": h.ml_score,
                         "risk_level": h.risk_level,
+                        "genai_parecer": h.genai_parecer,
                         "created_at": h.created_at.isoformat(),
                     }
                     for h in historico

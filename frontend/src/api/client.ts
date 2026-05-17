@@ -235,6 +235,76 @@ export interface DeteccaoIA {
   historico_analises: { versao: number; triggered_by: string; ml_fraude_detectada: boolean; risk_level: string; created_at: string }[]
 }
 
+export interface EventoFluxoIA {
+  data: string | null
+  perfil: string
+  acao: string
+  acao_label: string
+  entity_type?: string
+  entity_id?: number
+  detalhes?: Record<string, unknown>
+}
+
+export interface AnaliseIAVersao {
+  id: number
+  versao: number
+  triggered_by: string
+  triggered_label?: string
+  risk_score: number
+  risk_level: string
+  ml_score?: number
+  ml_fraude_detectada: boolean
+  ml_motivos?: string
+  genai_parecer?: string
+  dados_conferem?: boolean
+  created_at: string | null
+}
+
+export interface HistoricoControleIAItem {
+  pagamento_id: number
+  codigo_pagamento: string
+  remessa_id: number
+  remessa_titulo?: string | null
+  remessa_status?: string | null
+  valor: number
+  beneficiario_nome?: string
+  beneficiario_documento?: string
+  tipo_beneficiario?: string
+  tipo_despesa?: string
+  risk_score: number
+  risk_level: string
+  ml_score?: number
+  ml_fraude_detectada: boolean
+  ml_motivos?: string
+  genai_parecer?: string
+  gerente_justificativa?: string | null
+  motivo_devolucao?: string | null
+  revisado_observacao?: string
+  eventos_fluxo: EventoFluxoIA[]
+  analises_ia: AnaliseIAVersao[]
+}
+
+export interface HistoricoControleIAResponse {
+  resumo: {
+    total_registros: number
+    fraudes_ml: number
+    eventos_por_perfil?: Record<string, number>
+  }
+  itens: HistoricoControleIAItem[]
+}
+
+export interface MetricasIAResponse {
+  resumo: {
+    total_analises: number
+    total_pagamentos_ia: number
+    fraudes_ml: number
+    atualizado_em?: string
+  }
+  por_perfil: { perfil: string; label: string; quantidade: number }[]
+  por_mes: { mes: string; label: string; quantidade: number }[]
+  por_tipo_deteccao: { tipo: string; label: string; quantidade: number }[]
+}
+
 export interface KPIs {
   total_remessas: number
   total_pagamentos: number
@@ -359,6 +429,10 @@ export const apiClient = {
     api.post<Remessa>(`/remessas/${id}/reanalisar-ia`, {}, { timeout: 300000 }),
   limparLancamentos: () => api.post('/admin/limpar-lancamentos'),
   deteccoesIA: () => api.get<DeteccaoIA[]>('/dashboard/deteccoes-ia'),
+  historicoControleIA: (limit = 150) =>
+    api.get<HistoricoControleIAResponse>('/dashboard/historico-controle-ia', { params: { limit } }),
+  metricasIA: (meses = 6) =>
+    api.get<MetricasIAResponse>('/dashboard/metricas-ia', { params: { meses } }),
   decisaoRemessa: (id: number, aprovado: boolean, justificativa?: string) =>
     api.post<Remessa>(`/remessas/${id}/decisao`, {
       aprovado,

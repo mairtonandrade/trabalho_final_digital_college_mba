@@ -423,7 +423,24 @@ def decisao_gerente(
     if remessa.status != "aguardando_gerente":
         raise HTTPException(400, "Remessa não está aguardando gerente")
 
+    if payload.aprovado and not remessa.analise_ia_concluida:
+        raise HTTPException(
+            400,
+            "A remessa só pode ser liberada após a conclusão da análise IA. "
+            "Aguarde o processamento ou solicite reanálise.",
+        )
+
     pagamentos = db.query(Pagamento).filter(Pagamento.remessa_id == remessa_id).all()
+
+    if payload.aprovado:
+        sem_ia = [p for p in pagamentos if not p.ia_analisado]
+        if sem_ia:
+            ids = ", ".join(f"PAY-{p.id:06d}" for p in sem_ia)
+            raise HTTPException(
+                400,
+                f"Todos os pagamentos devem passar pela revisão da IA antes da liberação. "
+                f"Pendente(s): {ids}.",
+            )
     tem_nao_cadastrado = any(p.fornecedor_nao_cadastrado for p in pagamentos)
     tem_pf_nao_cad = any(p.pf_nao_cadastrado for p in pagamentos)
 

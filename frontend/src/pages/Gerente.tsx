@@ -54,6 +54,11 @@ export default function Gerente() {
 
   const todosRevisados = (r: Remessa) => r.pagamentos.every((p) => p.revisado_gerente)
 
+  const iaConcluidaRemessa = (r: Remessa) =>
+    Boolean(r.analise_ia_concluida) && r.pagamentos.every((p) => p.ia_analisado)
+
+  const podeLiberar = (r: Remessa) => todosRevisados(r) && iaConcluidaRemessa(r)
+
   const devolverAnalista = async (id: number) => {
     if (!motivoDevolucao.trim()) {
       setMsg('Informe o motivo da devolução ao analista.')
@@ -86,6 +91,12 @@ export default function Gerente() {
   }
 
   const decisaoRemessa = async (id: number, aprovado: boolean, r: Remessa) => {
+    if (aprovado && !iaConcluidaRemessa(r)) {
+      setMsg(
+        'Liberação bloqueada: todos os pagamentos devem concluir a análise da IA antes da aprovação gerencial.'
+      )
+      return
+    }
     if (aprovado && !todosRevisados(r)) {
       setMsg('Revise valores e documentos de todos os pagamentos antes de liberar a remessa.')
       return
@@ -240,8 +251,8 @@ export default function Gerente() {
       <section>
         <h2 className="text-lg font-semibold mb-4">Remessas — 2ª assinatura</h2>
         <p className="text-sm text-slate-400 mb-3">
-          Resultados da análise IA (ML + GenAI) aparecem aqui. Revise anexos e marque cada pagamento antes de liberar.
-          Em caso de fraude, devolva ao analista para correção e reenvio.
+          Resultados da análise IA (ML + GenAI) aparecem aqui. A liberação só é permitida após a IA concluir
+          todos os pagamentos e o gerente revisar anexos e valores. Em caso de fraude, devolva ao analista.
         </p>
         <textarea
           placeholder="Justificativa para liberar (obrigatória se alto risco / fraude ML / não cadastrado)"
@@ -278,7 +289,12 @@ export default function Gerente() {
                   Modelo ML detectou fraude em um ou mais pagamentos — justificativa obrigatória para liberar.
                 </p>
               )}
-              {!todosRevisados(r) && (
+              {!iaConcluidaRemessa(r) && (
+                <p className="text-amber-400 text-sm mb-3 border border-amber-700/50 p-2 rounded">
+                  Aguarde a conclusão da análise IA em todos os pagamentos antes de liberar.
+                </p>
+              )}
+              {!todosRevisados(r) && iaConcluidaRemessa(r) && (
                 <p className="text-violet-400 text-sm mb-3 border border-violet-700/50 p-2 rounded">
                   Revise todos os pagamentos (anexos + valores) antes de liberar.
                 </p>
@@ -296,7 +312,11 @@ export default function Gerente() {
                     {p.fornecedor_nao_cadastrado ? ' · PJ NÃO CADASTRADO' : ''}
                     {p.tipo_despesa === 'salario' && p.competencia ? ` · Sal. ${p.competencia}` : ''}
                   </p>
-                  {p.ia_analisado ? <RiskBadge level={p.risk_level} score={p.risk_score} /> : null}
+                  {p.ia_analisado ? (
+                    <RiskBadge level={p.risk_level} score={p.risk_score} />
+                  ) : (
+                    <p className="text-amber-400 text-xs mt-1">Aguardando análise IA</p>
+                  )}
                   <MlFraudAlert
                     detectada={p.ml_fraude_detectada}
                     score={p.ml_score}
@@ -314,7 +334,15 @@ export default function Gerente() {
               <div className="flex flex-wrap gap-2 mt-4">
                 <button
                   onClick={() => decisaoRemessa(r.id, true, r)}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm"
+                  disabled={!podeLiberar(r)}
+                  title={
+                    !iaConcluidaRemessa(r)
+                      ? 'Conclua a análise IA em todos os pagamentos'
+                      : !todosRevisados(r)
+                        ? 'Revise todos os pagamentos'
+                        : undefined
+                  }
+                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Liberar (debita conta)
                 </button>
