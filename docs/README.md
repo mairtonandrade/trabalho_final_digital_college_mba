@@ -14,6 +14,18 @@
 | [06 — Catálogo de fraudes](06-catalogo-fraudes.md) | Todos os cenários ML/heurística/GenAI |
 | [07 — Mapa de dados demo](07-mapa-dados-demo.md) | Onde ver histórico, fraudes e saldos por perfil |
 
+### Documentação do modelo de IA
+
+Pasta dedicada: **[modelo-ia/](modelo-ia/README.md)**
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [Treinamento](modelo-ia/01-treinamento-do-modelo.md) | Dataset, features, retreino XGBoost |
+| [Resultados](modelo-ia/02-resultados-e-metricas.md) | F1, AUC, métricas da demo |
+| [Dicionário](modelo-ia/03-dicionario-de-deteccoes.md) | Códigos, campos, endpoints |
+| [Processo completo](modelo-ia/04-processo-completo-ia.md) | Pipeline no dia a dia |
+| [Mapa de nomenclaturas](modelo-ia/05-mapa-de-nomenclaturas.md) | Glossário e gráficos |
+
 ## Telas do sistema
 
 > Imagens **PNG** para o GitHub (acentuação correta em UTF-8). Fonte editável: `assets/*.svg`. Para regerar: `npx @resvg/resvg-js-cli --fit-width 1200 assets/NOME.svg assets/NOME.png` na pasta `docs`.
