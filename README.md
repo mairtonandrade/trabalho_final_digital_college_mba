@@ -13,6 +13,7 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 | Arquitetura | [`docs/02-arquitetura.md`](docs/02-arquitetura.md) |
 | Fluxo de IA | [`docs/03-fluxo-ia.md`](docs/03-fluxo-ia.md) |
 | **Modelo de IA (treino, métricas, dicionário)** | [`docs/modelo-ia/`](docs/modelo-ia/README.md) |
+| **Plano SaaS (negócio, infra, suporte, LGPD)** | [`docs/comercial-saas/`](docs/comercial-saas/README.md) |
 | Deploy Netlify | [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md) |
 | Roteiro de apresentação | [`docs/05-apresentacao.md`](docs/05-apresentacao.md) |
 | Guia no app | [`GUIA_UTILIZACAO.md`](GUIA_UTILIZACAO.md) |

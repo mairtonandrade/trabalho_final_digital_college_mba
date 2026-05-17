@@ -14,6 +14,10 @@
 | [06 — Catálogo de fraudes](06-catalogo-fraudes.md) | Todos os cenários ML/heurística/GenAI |
 | [07 — Mapa de dados demo](07-mapa-dados-demo.md) | Onde ver histórico, fraudes e saldos por perfil |
 
+### Plano comercial e operação SaaS
+
+Pasta dedicada: **[comercial-saas/](comercial-saas/README.md)** — negócio, infra multi-cliente, segurança, suporte, treinamento e implantação.
+
 ### Documentação do modelo de IA
 
 Pasta dedicada: **[modelo-ia/](modelo-ia/README.md)**
