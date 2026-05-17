@@ -28,8 +28,7 @@
 | Fluxo completo do processo | ![Fluxo completo](assets/06-fluxo-completo.png) |
 
 > Screenshots `01`–`05`: captura real da UI (`node scripts/capture_doc_screenshots.mjs`).  
-> `06-fluxo-completo`: diagrama em SVG (`assets/06-fluxo-completo.svg`) — regerar PNG com `scripts/regenerate_doc_assets.ps1`.  
-> Pitch Manus: [`07-pitch-manus-ai.md`](07-pitch-manus-ai.md).
+> `06-fluxo-completo`: diagrama em SVG (`assets/06-fluxo-completo.svg`) — regerar PNG com `scripts/regenerate_doc_assets.ps1`.
 
 ## Dados de demonstração
 
