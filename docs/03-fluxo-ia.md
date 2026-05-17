@@ -1,6 +1,8 @@
 # 03 — Fluxo de Inteligência Artificial
 
-![Fluxo IA](assets/05-fluxo-ia.svg)
+![Fluxo completo](assets/06-fluxo-completo.svg)
+
+![Pipeline IA (detalhe)](assets/05-fluxo-ia.svg)
 
 ## Quando a IA executa
 

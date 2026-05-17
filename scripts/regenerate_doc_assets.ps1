@@ -5,7 +5,8 @@ $assets = Join-Path $root "docs\assets"
 $frontend = Join-Path $root "frontend"
 
 Push-Location $frontend
-$svgs = @("01-home", "02-analista", "03-gerente-ia", "04-diretoria", "05-fluxo-ia")
+# PNGs 01-05: preferir screenshots reais (scripts/capture_doc_screenshots.mjs)
+$svgs = @("06-fluxo-completo")
 foreach ($name in $svgs) {
   $in = Join-Path $assets "$name.svg"
   $out = Join-Path $assets "$name.png"

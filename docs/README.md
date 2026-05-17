@@ -23,8 +23,13 @@
 | Home — seleção de perfil | ![Tela inicial](assets/01-home.png) |
 | Analista | ![Painel do analista](assets/02-analista.png) |
 | Gerente + IA | ![Painel do gerente](assets/03-gerente-ia.png) |
-| Diretoria | ![Dashboard diretoria](assets/04-diretoria.png) |
-| Fluxo IA | ![Fluxo de análise IA](assets/05-fluxo-ia.png) |
+| Diretoria — KPIs | ![Dashboard diretoria](assets/04-diretoria.png) |
+| Painéis de detecção IA | ![Gráficos IA](assets/05-paineis-ia.png) |
+| Fluxo completo do processo | ![Fluxo completo](assets/06-fluxo-completo.png) |
+
+> Screenshots `01`–`05`: captura real da UI (`node scripts/capture_doc_screenshots.mjs`).  
+> `06-fluxo-completo`: diagrama em SVG (`assets/06-fluxo-completo.svg`) — regerar PNG com `scripts/regenerate_doc_assets.ps1`.  
+> Pitch Manus: [`07-pitch-manus-ai.md`](07-pitch-manus-ai.md).
 
 ## Dados de demonstração
 

@@ -14,7 +14,10 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 | Fluxo de IA | [`docs/03-fluxo-ia.md`](docs/03-fluxo-ia.md) |
 | Deploy Netlify | [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md) |
 | Roteiro de apresentação | [`docs/05-apresentacao.md`](docs/05-apresentacao.md) |
+| Pitch Manus AI (10 slides) | [`docs/07-pitch-manus-ai.md`](docs/07-pitch-manus-ai.md) |
 | Guia no app | [`GUIA_UTILIZACAO.md`](GUIA_UTILIZACAO.md) |
+
+Telas e fluxo completo: [`docs/README.md`](docs/README.md#telas-do-sistema) (`docs/assets/01`–`06`).
 
 ## Stack
 
