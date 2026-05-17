@@ -2,7 +2,7 @@
 
 Sistema web de **governança de pagamentos** com dupla aprovação (Analista → Gerente), **detecção de fraudes (XGBoost)**, **parecer GenAI** e dashboard executivo para a Diretoria.
 
-![Tela inicial](docs/assets/01-home.svg)
+![Tela inicial - selecao de perfil](docs/assets/01-home.png)
 
 ## Documentação completa
 

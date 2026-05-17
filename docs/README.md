@@ -16,15 +16,15 @@
 
 ## Telas do sistema
 
-![Tela inicial — seleção de perfil](assets/01-home.svg)
+> O GitHub não exibe arquivos `.svg` inline no Markdown. Use as imagens **PNG** abaixo (fonte editável em `assets/*.svg`).
 
-![Painel do analista](assets/02-analista.svg)
-
-![Painel do gerente com IA](assets/03-gerente-ia.svg)
-
-![Dashboard da diretoria](assets/04-diretoria.svg)
-
-![Fluxo de análise IA](assets/05-fluxo-ia.svg)
+| Tela | Preview |
+|------|---------|
+| Home — seleção de perfil | ![Tela inicial](assets/01-home.png) |
+| Analista | ![Painel do analista](assets/02-analista.png) |
+| Gerente + IA | ![Painel do gerente](assets/03-gerente-ia.png) |
+| Diretoria | ![Dashboard diretoria](assets/04-diretoria.png) |
+| Fluxo IA | ![Fluxo de análise IA](assets/05-fluxo-ia.png) |
 
 ## Dados de demonstração
 
