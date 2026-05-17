@@ -137,12 +137,14 @@ def _audit(db, entity_type, entity_id, action, role, details, dt):
 
 
 def _debitar_conta(db, conta: ContaBancaria, valor: float, remessa_id: int, desc: str, dt: datetime):
-    conta.saldo = max(0, conta.saldo - valor)
+    """Debita até 12% do saldo por remessa — saldos finais ajustados no pós-seed."""
+    debito = min(valor, conta.saldo * 0.12)
+    conta.saldo = max(conta.saldo * 0.35, conta.saldo - debito)
     db.add(
         MovimentoConta(
             conta_id=conta.id,
             tipo="debito",
-            valor=valor,
+            valor=round(debito, 2),
             saldo_apos=conta.saldo,
             descricao=desc,
             remessa_id=remessa_id,
@@ -400,6 +402,16 @@ def seed_historico_demo(force: bool = False) -> bool:
             )
         rem_atual.valor_total = total
         rem_atual.risk_score_max = max(p.risk_score for p in db.query(Pagamento).filter_by(remessa_id=rem_atual.id))
+
+        from app.seed_auditoria import (
+            ajustar_saldos_contas,
+            enriquecer_pagamentos_diretoria,
+            seed_auditoria_completa,
+        )
+
+        enriquecer_pagamentos_diretoria(db)
+        seed_auditoria_completa(db)
+        ajustar_saldos_contas(db)
 
         db.commit()
         return True

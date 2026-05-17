@@ -108,8 +108,16 @@ def seed_demo_data():
     finally:
         db.close()
 
-    from app.seed_demo_historico import seed_historico_demo
     from app.seed_cenarios_fraude import seed_catalogo_fraude
+    from app.seed_demo_historico import seed_historico_demo
+    from app.seed_auditoria import ajustar_saldos_contas, seed_auditoria_completa
 
     seed_historico_demo(force=False)
     seed_catalogo_fraude(force=False)
+
+    db2 = SessionLocal()
+    try:
+        seed_auditoria_completa(db2)
+        ajustar_saldos_contas(db2)
+    finally:
+        db2.close()

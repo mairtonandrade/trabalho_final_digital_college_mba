@@ -12,6 +12,7 @@
 | [04 — Deploy Netlify](04-deploy-netlify.md) | Publicar frontend e conectar API |
 | [05 — Apresentação](05-apresentacao.md) | Roteiro de demo nos 3 perfis |
 | [06 — Catálogo de fraudes](06-catalogo-fraudes.md) | Todos os cenários ML/heurística/GenAI |
+| [07 — Mapa de dados demo](07-mapa-dados-demo.md) | Onde ver histórico, fraudes e saldos por perfil |
 
 ## Telas do sistema
 

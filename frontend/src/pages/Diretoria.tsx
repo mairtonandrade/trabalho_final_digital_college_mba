@@ -55,15 +55,20 @@ export default function Diretoria() {
       apiClient.pagamentosPFNaoCadastrados(),
       apiClient.pontosAtencao(),
       apiClient.deteccoesIA(),
-    ]).then(([k, a, al, nc, pf, pa, det]) => {
-      setKpis(k.data)
-      setLogs(a.data)
-      setAlertas(al.data)
-      setNaoCad(nc.data)
-      setPfNaoCad(pf.data)
-      setPontosAtencao(pa.data)
-      setDeteccoes(det.data)
-    })
+    ])
+      .then(([k, a, al, nc, pf, pa, det]) => {
+        setKpis(k.data)
+        setLogs(Array.isArray(a.data) ? a.data : [])
+        setAlertas(Array.isArray(al.data) ? al.data : [])
+        setNaoCad(Array.isArray(nc.data) ? nc.data : [])
+        setPfNaoCad(Array.isArray(pf.data) ? pf.data : [])
+        setPontosAtencao(Array.isArray(pa.data) ? pa.data : [])
+        setDeteccoes(Array.isArray(det.data) ? det.data : [])
+      })
+      .catch(() => {
+        setLogs([])
+        setDeteccoes([])
+      })
   }, [])
 
   const chartData = kpis
