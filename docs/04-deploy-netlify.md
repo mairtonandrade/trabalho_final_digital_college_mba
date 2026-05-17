@@ -1,12 +1,16 @@
 # 04 — Deploy no Netlify
 
-## Por que a tela ficava em branco?
+## Problemas comuns no Netlify
 
-No Netlify, sem `VITE_API_URL`, as chamadas iam para `/api/...` e o Netlify devolvia o `index.html` (redirect SPA). O app quebrava ao processar HTML como JSON.
+### Perfis redirecionam para a home ou tela escura
 
-**Correção:** o build em produção **sem** `VITE_API_URL` ativa o **modo demonstração** (dados de exemplo embutidos). Os perfis abrem normalmente.
+1. **Build antigo em cache** — no painel Netlify: *Deploys* → *Trigger deploy* → **Clear cache and deploy site**.
+2. **Modo demo** — o `netlify.toml` define `VITE_DEMO_MODE=true` para funcionar sem backend.
+3. **Rotas SPA** — `/* → /index.html` (200) em `netlify.toml` e `frontend/public/_redirects`.
 
-Para dados reais do backend, configure `VITE_API_URL` e faça redeploy.
+### API retorna HTML em vez de JSON
+
+Sem modo demo, chamadas a `/api` no Netlify recebem o `index.html` e o app quebra. Use `VITE_DEMO_MODE=true` (padrão no repo) ou configure `VITE_API_URL` com API hospedada.
 
 ## Frontend (Netlify)
 

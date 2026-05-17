@@ -23,16 +23,18 @@ function ProtectedRoute({
 }) {
   const { role, setRole } = useRole()
   const location = useLocation()
-  const segment = location.pathname.replace(/^\//, '')
-  const roleFromPath = PATH_TO_ROLE[segment]
+  const segment = location.pathname.replace(/^\//, '').split('/')[0] ?? ''
+  const pathRole = PATH_TO_ROLE[segment]
 
+  // URL do painel tem prioridade (links diretos, F5 e deploy Netlify)
   useEffect(() => {
-    if (!role && roleFromPath) setRole(roleFromPath)
-  }, [role, roleFromPath, setRole])
+    if (pathRole === allowed) setRole(allowed)
+  }, [pathRole, allowed, setRole])
 
-  const effective = role || roleFromPath
-  if (!effective) return <Navigate to="/" replace />
-  if (effective !== allowed) return <Navigate to="/" replace />
+  if (pathRole === allowed) return <>{children}</>
+
+  if (!role) return <Navigate to="/" replace state={{ from: location }} />
+  if (role !== allowed) return <Navigate to={`/${role}`} replace />
   return <>{children}</>
 }
 

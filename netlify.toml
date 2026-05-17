@@ -1,14 +1,16 @@
 [build]
   base = "frontend"
-  command = "npm run build"
+  command = "npm ci && npm run build"
   publish = "dist"
 
-# Sem VITE_API_URL o build ativa modo demonstração (dados de exemplo).
-# Com API hospedada: VITE_API_URL=https://sua-api.com/api
+# Modo demo obrigatório no Netlify (sem backend). Para API real, defina VITE_API_URL no painel.
 [build.environment]
   NODE_VERSION = "20"
+  VITE_DEMO_MODE = "true"
 
+# SPA: todas as rotas (/analista, /gerente, /diretoria) servem index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false

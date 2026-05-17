@@ -50,16 +50,26 @@ export default function Analista() {
   })
 
   const load = async () => {
-    const [f, c] = await Promise.all([apiClient.fornecedoresAtivos(), apiClient.colaboradoresAtivos()])
-    setFornecedores(f.data)
-    setColaboradores(c.data)
+    try {
+      const [f, c] = await Promise.all([
+        apiClient.fornecedoresAtivos(),
+        apiClient.colaboradoresAtivos(),
+      ])
+      setFornecedores(f.data)
+      setColaboradores(c.data)
+    } catch {
+      setMsg('Não foi possível carregar cadastros. Tente recarregar a página.')
+    }
   }
 
   useEffect(() => {
     load()
-    apiClient.remessas('devolvida_analista').then((r) => {
-      if (r.data.length > 0) setRemessaAtiva(r.data[0])
-    })
+    apiClient
+      .remessas('devolvida_analista')
+      .then((r) => {
+        if (r.data.length > 0) setRemessaAtiva(r.data[0])
+      })
+      .catch(() => {})
   }, [])
 
   const criarFornecedor = async (e: React.FormEvent) => {

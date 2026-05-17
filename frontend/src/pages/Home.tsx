@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom'
 import { Link, useNavigate } from 'react-router-dom'
 import { useRole } from '../context/RoleContext'
 
@@ -92,7 +93,7 @@ export default function Home() {
               key={p.role}
               type="button"
               onClick={() => {
-                setRole(p.role)
+                flushSync(() => setRole(p.role))
                 navigate(p.path)
               }}
               className={`glass-card group text-left p-6 ${p.border} hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/30`}
