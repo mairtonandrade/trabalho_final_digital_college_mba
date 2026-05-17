@@ -1,34 +1,58 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Layout from '../components/Layout'
 import PageHeader from '../components/ui/PageHeader'
+import ModuloSelector, { type ModuloItem } from '../components/ui/ModuloSelector'
+
+const MODULOS_GERENTE: ModuloItem[] = [
+  { id: 'remessas', titulo: 'Remessas', descricao: 'Aprovar, devolver e liberar pagamentos', icone: '✅' },
+  { id: 'fornecedores', titulo: 'Fornecedores', descricao: 'Aprovar cadastros e KYC', icone: '🏢' },
+  { id: 'cadastros', titulo: 'Cadastros', descricao: 'Colaboradores e solicitações', icone: '📁' },
+  { id: 'contas', titulo: 'Contas e extrato', descricao: 'Saldos e movimentação', icone: '🏦' },
+]
 import CadastrosPanel from '../components/CadastrosPanel'
 import ContasPanel from '../components/ContasPanel'
+import FiltrosMovimentacao from '../components/FiltrosMovimentacao'
 import AnaliseHistorico from '../components/AnaliseHistorico'
 import MlFraudAlert from '../components/MlFraudAlert'
 import PagamentoRevisaoPanel from '../components/PagamentoRevisaoPanel'
 import RiskBadge from '../components/RiskBadge'
 import { apiClient, type Fornecedor, type FornecedorDetalhe, type Remessa } from '../api/client'
+import {
+  dataPagamentoOuRemessa,
+  isFraudeMl,
+  noPeriodo,
+  PERIODO_TODOS,
+  periodoAtivo,
+  remessaNoPeriodo,
+  type PeriodoFiltro,
+} from '../utils/filtrosMovimentacao'
 
 export default function Gerente() {
   const [pendentes, setPendentes] = useState<Fornecedor[]>([])
   const [todosFornecedores, setTodosFornecedores] = useState<Fornecedor[]>([])
   const [remessas, setRemessas] = useState<Remessa[]>([])
+  const [remessasHistorico, setRemessasHistorico] = useState<Remessa[]>([])
+  const [periodo, setPeriodo] = useState<PeriodoFiltro>(PERIODO_TODOS)
+  const [somenteFraude, setSomenteFraude] = useState(false)
   const [justificativa, setJustificativa] = useState('')
   const [msg, setMsg] = useState('')
   const [emailPreview, setEmailPreview] = useState('')
   const [detalhe, setDetalhe] = useState<FornecedorDetalhe | null>(null)
   const [motivoDevolucao, setMotivoDevolucao] = useState('')
   const [reanalisando, setReanalisando] = useState(false)
+  const [modulo, setModulo] = useState('remessas')
 
   const load = async () => {
-    const [f, all, r] = await Promise.all([
+    const [f, all, r, hist] = await Promise.all([
       apiClient.fornecedores('pendente'),
       apiClient.fornecedores(),
       apiClient.remessas('aguardando_gerente', true),
+      apiClient.remessas(undefined, true),
     ])
     setPendentes(f.data)
     setTodosFornecedores(all.data)
     setRemessas(r.data)
+    setRemessasHistorico(hist.data)
   }
 
   useEffect(() => {
@@ -58,6 +82,52 @@ export default function Gerente() {
     Boolean(r.analise_ia_concluida) && r.pagamentos.every((p) => p.ia_analisado)
 
   const podeLiberar = (r: Remessa) => todosRevisados(r) && iaConcluidaRemessa(r)
+
+  const remessasAguardandoFiltradas = useMemo(() => {
+    return remessas
+      .filter((r) => remessaNoPeriodo(r, periodo))
+      .map((r) => ({
+        ...r,
+        pagamentos: r.pagamentos.filter((p) => {
+          if (somenteFraude && !isFraudeMl(p)) return false
+          if (periodoAtivo(periodo) && !noPeriodo(dataPagamentoOuRemessa(p, r), periodo)) return false
+          return true
+        }),
+      }))
+      .filter((r) => r.pagamentos.length > 0 || (!somenteFraude && !periodoAtivo(periodo)))
+  }, [remessas, periodo, somenteFraude])
+
+  const remessasHistoricoFiltradas = useMemo(() => {
+    return remessasHistorico
+      .filter((r) => r.status !== 'aguardando_gerente')
+      .filter((r) => remessaNoPeriodo(r, periodo))
+      .map((r) => ({
+        ...r,
+        pagamentos: r.pagamentos.filter((p) => {
+          if (somenteFraude && !isFraudeMl(p)) return false
+          if (periodoAtivo(periodo) && !noPeriodo(dataPagamentoOuRemessa(p, r), periodo)) return false
+          return true
+        }),
+      }))
+      .filter((r) => r.pagamentos.length > 0)
+  }, [remessasHistorico, periodo, somenteFraude])
+
+  const datasReferencia = useMemo(
+    () =>
+      remessasHistorico.flatMap((r) => [
+        r.created_at,
+        ...r.pagamentos.flatMap((p) => [
+          p.created_at,
+          ...(p.historico_analises || []).map((h) => h.created_at),
+        ]),
+      ]),
+    [remessasHistorico]
+  )
+
+  const totalPagamentos = remessasHistorico.reduce((s, r) => s + r.pagamentos.length, 0)
+  const totalVisivel =
+    remessasAguardandoFiltradas.reduce((s, r) => s + r.pagamentos.length, 0) +
+    remessasHistoricoFiltradas.reduce((s, r) => s + r.pagamentos.length, 0)
 
   const devolverAnalista = async (id: number) => {
     if (!motivoDevolucao.trim()) {
@@ -138,19 +208,38 @@ export default function Gerente() {
         subtitle="Analise scores ML, parecer GenAI, documentos e libere ou devolva remessas ao analista."
       />
       {msg && (
-        <div className="mb-6 p-4 rounded-lg bg-slate-800 border border-slate-700 text-sm">{msg}</div>
+        <div className="mb-6 p-4 rounded-lg bg-slate-800/90 border border-slate-500 text-sm text-slate-100">{msg}</div>
       )}
 
-      <div className="mb-10">
-        <ContasPanel />
-      </div>
+      <ModuloSelector modulos={MODULOS_GERENTE} ativo={modulo} onChange={setModulo} />
 
-      <div className="mb-10">
-        <CadastrosPanel modo="gerente" />
-      </div>
+      {(modulo === 'remessas' || modulo === 'fornecedores') && (
+      <FiltrosMovimentacao
+        periodo={periodo}
+        onPeriodoChange={setPeriodo}
+        datasReferencia={datasReferencia}
+        somenteFraude={somenteFraude}
+        onSomenteFraudeChange={setSomenteFraude}
+        totalVisivel={totalVisivel}
+        totalGeral={totalPagamentos}
+      />
+      )}
 
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-4">Fornecedores pendentes (aprovação inicial)</h2>
+      {modulo === 'contas' && (
+        <div className="mb-10">
+          <ContasPanel />
+        </div>
+      )}
+
+      {modulo === 'cadastros' && (
+        <div className="mb-10">
+          <CadastrosPanel modo="gerente" />
+        </div>
+      )}
+
+      {modulo === 'fornecedores' && (
+      <section className="mb-10 panel-surface">
+        <h2 className="section-title mb-4">Fornecedores — aprovação e histórico</h2>
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {todosFornecedores.map((f) => (
@@ -211,9 +300,11 @@ export default function Gerente() {
           )}
         </div>
       </section>
+      )}
 
-      <section className="mb-10">
-        <h2 className="text-lg font-semibold mb-4">Fornecedores pendentes</h2>
+      {modulo === 'fornecedores' && (
+      <section className="mb-10 panel-surface">
+        <h2 className="section-title mb-4">Cadastros aguardando aprovação</h2>
         <div className="space-y-3">
           {pendentes.length === 0 && (
             <p className="text-slate-500 text-sm">Nenhum cadastro pendente.</p>
@@ -247,9 +338,11 @@ export default function Gerente() {
           ))}
         </div>
       </section>
+      )}
 
-      <section>
-        <h2 className="text-lg font-semibold mb-4">Remessas — 2ª assinatura</h2>
+      {modulo === 'remessas' && (
+      <section className="panel-surface">
+        <h2 className="section-title mb-4">Remessas — 2ª assinatura</h2>
         <p className="text-sm text-slate-400 mb-3">
           Resultados da análise IA (ML + GenAI) aparecem aqui. A liberação só é permitida após a IA concluir
           todos os pagamentos e o gerente revisar anexos e valores. Em caso de fraude, devolva ao analista.
@@ -267,7 +360,10 @@ export default function Gerente() {
           onChange={(e) => setMotivoDevolucao(e.target.value)}
         />
         <div className="space-y-4">
-          {remessas.map((r) => (
+          {remessasAguardandoFiltradas.length === 0 && (
+            <p className="text-slate-500 text-sm">Nenhuma remessa aguardando para os filtros selecionados.</p>
+          )}
+          {remessasAguardandoFiltradas.map((r) => (
             <div key={r.id} className="p-5 rounded-xl border border-slate-800 bg-slate-900/50">
               <div className="flex flex-wrap justify-between gap-2 mb-2">
                 <h3 className="font-semibold">
@@ -368,8 +464,52 @@ export default function Gerente() {
               </div>
             </div>
           ))}
+
+          {(periodoAtivo(periodo) || somenteFraude) && (
+            <div className="mt-10 pt-8 border-t border-slate-800">
+              <h3 className="text-md font-semibold mb-3 text-slate-300">
+                Histórico — movimentações do período
+              </h3>
+              {remessasHistoricoFiltradas.length === 0 ? (
+                <p className="text-slate-500 text-sm">Nenhuma movimentação no histórico para os filtros.</p>
+              ) : (
+                <div className="space-y-4">
+                  {remessasHistoricoFiltradas.map((r) => (
+                    <div key={`hist-${r.id}`} className="p-4 rounded-xl border border-slate-700 bg-slate-900/40">
+                      <div className="flex flex-wrap justify-between gap-2 mb-2">
+                        <h4 className="font-medium text-sm">
+                          #{r.id} — {r.titulo} · <span className="text-slate-500">{r.status}</span>
+                        </h4>
+                        <RiskBadge level={r.risk_level} score={r.risk_score_max} />
+                      </div>
+                      <p className="text-xs text-slate-500 mb-2">
+                        {new Date(r.created_at).toLocaleDateString('pt-BR')} · R${' '}
+                        {r.valor_total.toLocaleString('pt-BR')}
+                      </p>
+                      {r.pagamentos.map((p) => (
+                        <div
+                          key={p.id}
+                          className="mt-2 p-2 rounded bg-slate-800 text-xs border border-slate-700"
+                        >
+                          <span className="font-mono text-cyan-400">
+                            {p.codigo_pagamento || `PAY-${p.id}`}
+                          </span>
+                          {' · '}
+                          {p.beneficiario_nome || p.fornecedor_razao_social}: R${' '}
+                          {p.valor.toLocaleString('pt-BR')}
+                          {isFraudeMl(p) && <span className="text-red-400 ml-2">· Fraude ML</span>}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
+
+      )}
 
       {emailPreview && (
         <section className="mt-8 p-4 rounded-xl border border-emerald-800/50 bg-emerald-950/30">

@@ -47,7 +47,7 @@ export default function Layout({
                 <p className="text-xs font-semibold tracking-wider text-emerald-400 uppercase">
                   Guardião de Pagamentos
                 </p>
-                <p className="text-sm text-slate-400 group-hover:text-slate-300 transition">
+                <p className="text-sm text-slate-200 group-hover:text-white transition">
                   {title}
                 </p>
               </div>

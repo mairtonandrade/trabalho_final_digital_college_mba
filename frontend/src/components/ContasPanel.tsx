@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
 import { apiClient, type ContaBancaria, type MovimentoConta } from '../api/client'
 
-export default function ContasPanel({ onSelectConta }: { onSelectConta?: (id: number) => void }) {
+export default function ContasPanel({
+  onSelectConta,
+  ocultarReceita = false,
+}: {
+  onSelectConta?: (id: number) => void
+  /** Diretoria: apenas consulta de saldos, sem formulário de crédito */
+  ocultarReceita?: boolean
+}) {
   const [contas, setContas] = useState<ContaBancaria[]>([])
   const [receita, setReceita] = useState({ contaId: '', valor: '', descricao: '' })
   const [msg, setMsg] = useState('')
@@ -80,6 +87,7 @@ export default function ContasPanel({ onSelectConta }: { onSelectConta?: (id: nu
         ))}
       </div>
 
+      {!ocultarReceita && (
       <form onSubmit={creditar} className="border-t border-slate-800 pt-4 space-y-2">
         <p className="text-sm font-medium text-slate-300">Registrar receita</p>
         <select
@@ -117,6 +125,7 @@ export default function ContasPanel({ onSelectConta }: { onSelectConta?: (id: nu
           Creditar receita
         </button>
       </form>
+      )}
 
       {contaMov && movimentos.length > 0 && (
         <div className="border-t border-slate-800 pt-3 max-h-40 overflow-y-auto text-xs">

@@ -246,6 +246,7 @@ class PagamentoRevisao(BaseModel):
 
 
 class PontoAtencaoOut(BaseModel):
+    created_at: str | None = None
     pagamento_id: int
     remessa_id: int
     remessa_status: Optional[str]

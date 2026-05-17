@@ -1,6 +1,12 @@
 import { useMemo, useState } from 'react'
 import RiskBadge from './RiskBadge'
 import type { HistoricoControleIAItem, HistoricoControleIAResponse } from '../api/client'
+import {
+  historicoNoPeriodo,
+  isFraudeMl,
+  PERIODO_TODOS,
+  type PeriodoFiltro,
+} from '../utils/filtrosMovimentacao'
 
 const PERFIL_COR: Record<string, string> = {
   analista: 'text-cyan-400 bg-cyan-950/40 border-cyan-800',
@@ -12,19 +18,23 @@ const PERFIL_COR: Record<string, string> = {
 export default function HistoricoControleIA({
   data,
   onVerPagamento,
+  periodo = PERIODO_TODOS,
+  somenteFraude = false,
 }: {
   data: HistoricoControleIAResponse | null
   onVerPagamento: (id: number) => void
+  periodo?: PeriodoFiltro
+  somenteFraude?: boolean
 }) {
   const [filtroPerfil, setFiltroPerfil] = useState<string>('todos')
-  const [somenteFraude, setSomenteFraude] = useState(false)
   const [busca, setBusca] = useState('')
   const [expandido, setExpandido] = useState<number | null>(null)
 
   const itens = useMemo(() => {
     if (!data?.itens) return []
     return data.itens.filter((item) => {
-      if (somenteFraude && !item.ml_fraude_detectada) return false
+      if (!historicoNoPeriodo(item, periodo)) return false
+      if (somenteFraude && !isFraudeMl(item)) return false
       if (busca) {
         const q = busca.toLowerCase()
         if (
@@ -42,7 +52,7 @@ export default function HistoricoControleIA({
       }
       return true
     })
-  }, [data, filtroPerfil, somenteFraude, busca])
+  }, [data, filtroPerfil, somenteFraude, periodo, busca])
 
   if (!data) {
     return <p className="text-slate-500 text-sm">Carregando histórico de controle...</p>
@@ -66,6 +76,11 @@ export default function HistoricoControleIA({
             <span className="badge border border-red-800 text-red-300">
               {data.resumo.fraudes_ml} fraudes ML
             </span>
+            {data.resumo.execucoes_ia != null && (
+              <span className="badge border border-slate-600 text-slate-300">
+                {data.resumo.execucoes_ia} execuções IA
+              </span>
+            )}
           </div>
         )}
       </div>
@@ -89,15 +104,6 @@ export default function HistoricoControleIA({
           <option value="sistema">Sistema / IA</option>
           <option value="diretoria">Diretoria</option>
         </select>
-        <label className="flex items-center gap-2 text-sm text-slate-400 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={somenteFraude}
-            onChange={(e) => setSomenteFraude(e.target.checked)}
-            className="rounded border-slate-600"
-          />
-          Somente fraude ML
-        </label>
       </div>
 
       {itens.length === 0 ? (

@@ -300,15 +300,19 @@ def seed_historico_demo(force: bool = False) -> bool:
                         {"motivo": rem.motivo_devolucao},
                         dt_envio + timedelta(hours=4),
                     )
-                    if pagamentos and rng.random() < 0.6:
-                        p0 = pagamentos[0]
-                        p0.valor = round(p0.valor * 0.85, 2)
-                        p0.ml_fraude_detectada = 0
-                        p0.ml_score = 0.22
-                        p0.risk_score = 0.28
-                        p0.risk_level = "baixo"
+                    for idx, p0 in enumerate(pagamentos):
+                        p0.valor = round(p0.valor * (0.88 if idx == 0 else 0.95), 2)
+                        if idx == 0:
+                            p0.ml_fraude_detectada = 0
+                            p0.ml_score = 0.22
+                            p0.risk_score = 0.28
+                            p0.risk_level = "baixo"
                         _registrar_analise_ia(
-                            db, p0, 2, "reanalise_gerente", dt_envio + timedelta(days=1)
+                            db,
+                            p0,
+                            2,
+                            "reanalise_gerente",
+                            dt_envio + timedelta(hours=12 + idx * 3),
                         )
                     continue
 
@@ -341,6 +345,16 @@ def seed_historico_demo(force: bool = False) -> bool:
 
                 # liberada_banco
                 dt_lib = dt_envio + timedelta(hours=rng.randint(8, 36))
+                for p in pagamentos:
+                    if (p.risk_score or 0) >= 0.45 or p.ml_fraude_detectada:
+                        if rng.random() < 0.35:
+                            _registrar_analise_ia(
+                                db,
+                                p,
+                                2,
+                                "reanalise_gerente",
+                                dt_lib - timedelta(hours=rng.randint(2, 8)),
+                            )
                 rem.status = "liberada_banco"
                 rem.email_auditoria = (
                     f"Auditoria remessa #{rem.id} — {len(pagamentos)} pagamentos, "
@@ -406,10 +420,12 @@ def seed_historico_demo(force: bool = False) -> bool:
         from app.seed_auditoria import (
             ajustar_saldos_contas,
             enriquecer_pagamentos_diretoria,
+            enriquecer_reanalises_gerente,
             seed_auditoria_completa,
         )
 
         enriquecer_pagamentos_diretoria(db)
+        enriquecer_reanalises_gerente(db)
         seed_auditoria_completa(db)
         ajustar_saldos_contas(db)
 

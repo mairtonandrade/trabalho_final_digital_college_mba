@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Bar,
   BarChart,
@@ -10,8 +10,19 @@ import {
 } from 'recharts'
 import Layout from '../components/Layout'
 import PageHeader from '../components/ui/PageHeader'
+import ModuloSelector, { type ModuloItem } from '../components/ui/ModuloSelector'
+
+const MODULOS_DIRETORIA: ModuloItem[] = [
+  { id: 'dashboard', titulo: 'Visão executiva', descricao: 'Indicadores e gráficos IA', icone: '📊' },
+  { id: 'historico', titulo: 'Histórico IA', descricao: 'Fluxos e trilha por pagamento', icone: '🔍' },
+  { id: 'contas', titulo: 'Contas', descricao: 'Saldos bancários', icone: '🏦' },
+  { id: 'alertas', titulo: 'Alertas e exceções', descricao: 'Fraudes, PF/PJ e pontos de atenção', icone: '⚠️' },
+  { id: 'auditoria', titulo: 'Auditoria', descricao: 'Trilha WORM e visão operacional', icone: '📜' },
+]
 import ContasPanel from '../components/ContasPanel'
+import FiltrosMovimentacao from '../components/FiltrosMovimentacao'
 import HistoricoControleIA from '../components/HistoricoControleIA'
+import IndicadoresExecutivos from '../components/IndicadoresExecutivos'
 import PainelGraficosIA from '../components/PainelGraficosIA'
 import PagamentoDetalheModal from '../components/PagamentoDetalheModal'
 import RiskBadge from '../components/RiskBadge'
@@ -23,9 +34,16 @@ import {
   type PagamentoPFNaoCadastrado,
   type DeteccaoIA,
   type HistoricoControleIAResponse,
-  type MetricasIAResponse,
   type PontoAtencao,
 } from '../api/client'
+import {
+  historicoNoPeriodo,
+  isFraudeMl,
+  painelDiretoriaConsolidado,
+  noPeriodo,
+  PERIODO_TODOS,
+  type PeriodoFiltro,
+} from '../utils/filtrosMovimentacao'
 
 interface Alerta {
   id: number
@@ -37,6 +55,8 @@ interface Alerta {
   fornecedor_nao_cadastrado?: boolean
   fornecedor_razao_social?: string
   fornecedor_status?: string
+  created_at?: string
+  ml_fraude_detectada?: boolean
 }
 
 export default function Diretoria() {
@@ -50,7 +70,9 @@ export default function Diretoria() {
   const [detalhePagamentoId, setDetalhePagamentoId] = useState<number | null>(null)
   const [deteccoes, setDeteccoes] = useState<DeteccaoIA[]>([])
   const [historicoIA, setHistoricoIA] = useState<HistoricoControleIAResponse | null>(null)
-  const [metricasIA, setMetricasIA] = useState<MetricasIAResponse | null>(null)
+  const [periodo, setPeriodo] = useState<PeriodoFiltro>(PERIODO_TODOS)
+  const [somenteFraude, setSomenteFraude] = useState(false)
+  const [modulo, setModulo] = useState('dashboard')
 
   useEffect(() => {
     Promise.all([
@@ -62,9 +84,8 @@ export default function Diretoria() {
       apiClient.pontosAtencao(),
       apiClient.deteccoesIA(),
       apiClient.historicoControleIA(150),
-      apiClient.metricasIA(6),
     ])
-      .then(([k, a, al, nc, pf, pa, det, hist, met]) => {
+      .then(([k, a, al, nc, pf, pa, det, hist]) => {
         setKpis(k.data)
         setLogs(Array.isArray(a.data) ? a.data : [])
         setAlertas(Array.isArray(al.data) ? al.data : [])
@@ -73,23 +94,123 @@ export default function Diretoria() {
         setPontosAtencao(Array.isArray(pa.data) ? pa.data : [])
         setDeteccoes(Array.isArray(det.data) ? det.data : [])
         setHistoricoIA(hist.data)
-        setMetricasIA(met.data)
       })
       .catch(() => {
         setLogs([])
         setDeteccoes([])
         setHistoricoIA(null)
-        setMetricasIA(null)
       })
   }, [])
 
-  const chartData = kpis
-    ? [
-        { name: 'Pagamentos', valor: kpis.total_pagamentos },
-        { name: 'Não cadastrados', valor: kpis.pagamentos_nao_cadastrados },
-        { name: 'Fraudes IA', valor: kpis.fraudes_detectadas },
-      ]
-    : []
+  const datasReferencia = useMemo(
+    () => [
+      ...logs.map((l) => l.created_at),
+      ...(historicoIA?.itens || []).flatMap((i) => [
+        i.created_at,
+        ...(i.eventos_fluxo || []).map((e) => e.data),
+        ...(i.analises_ia || []).map((a) => a.created_at),
+      ]),
+      ...deteccoes.map((d) => d.created_at),
+      ...pontosAtencao.map((p) => p.created_at),
+      ...naoCad.map((p) => p.created_at),
+      ...pfNaoCad.map((p) => p.created_at),
+      ...alertas.map((a) => a.created_at),
+    ],
+    [logs, historicoIA, deteccoes, pontosAtencao, naoCad, pfNaoCad, alertas]
+  )
+
+  const itensHistoricoFiltrados = useMemo(() => {
+    if (!historicoIA) return []
+    return historicoIA.itens.filter(
+      (i) => historicoNoPeriodo(i, periodo) && (!somenteFraude || isFraudeMl(i))
+    )
+  }, [historicoIA, periodo, somenteFraude])
+
+  const consolidado = useMemo(
+    () =>
+      painelDiretoriaConsolidado(
+        itensHistoricoFiltrados,
+        periodo,
+        kpis?.saldo_total_contas ?? null
+      ),
+    [itensHistoricoFiltrados, periodo, kpis]
+  )
+
+  const historicoFiltrado = useMemo(() => {
+    if (!historicoIA) return null
+    return {
+      ...historicoIA,
+      resumo: consolidado.historicoResumo,
+      itens: itensHistoricoFiltrados,
+    }
+  }, [historicoIA, itensHistoricoFiltrados, consolidado.historicoResumo])
+
+  const metricasExibir = consolidado.metricas
+  const kpisPainel = consolidado.kpis
+
+  const deteccoesF = useMemo(
+    () =>
+      deteccoes.filter(
+        (d) => noPeriodo(d.created_at, periodo) && (!somenteFraude || isFraudeMl(d))
+      ),
+    [deteccoes, periodo, somenteFraude]
+  )
+  const pontosF = useMemo(
+    () =>
+      pontosAtencao.filter(
+        (p) => noPeriodo(p.created_at, periodo) && (!somenteFraude || isFraudeMl(p))
+      ),
+    [pontosAtencao, periodo, somenteFraude]
+  )
+  const naoCadF = useMemo(
+    () =>
+      naoCad.filter(
+        (p) => noPeriodo(p.created_at, periodo) && (!somenteFraude || isFraudeMl(p))
+      ),
+    [naoCad, periodo, somenteFraude]
+  )
+  const pfNaoCadF = useMemo(
+    () =>
+      pfNaoCad.filter(
+        (p) => noPeriodo(p.created_at, periodo) && (!somenteFraude || isFraudeMl(p))
+      ),
+    [pfNaoCad, periodo, somenteFraude]
+  )
+  const alertasF = useMemo(
+    () =>
+      alertas.filter(
+        (a) => noPeriodo(a.created_at, periodo) && (!somenteFraude || isFraudeMl(a))
+      ),
+    [alertas, periodo, somenteFraude]
+  )
+  const logsF = useMemo(
+    () => logs.filter((l) => noPeriodo(l.created_at, periodo)),
+    [logs, periodo]
+  )
+
+  const totalMovimentos =
+    (historicoIA?.itens.length || 0) +
+    deteccoes.length +
+    pontosAtencao.length +
+    logs.length
+  const totalVisivel =
+    itensHistoricoFiltrados.length +
+    deteccoesF.length +
+    pontosF.length +
+    logsF.length
+
+  const chartDataAuditoria = useMemo(
+    () => [
+      { name: 'Pagamentos IA', valor: kpisPainel.pagamentosAnalisados },
+      { name: 'Execuções IA', valor: kpisPainel.execucoesIA },
+      { name: 'Fraudes ML', valor: kpisPainel.fraudesMl },
+      {
+        name: 'PJ não cadastrados',
+        valor: kpisPainel.pjNaoCadastrados,
+      },
+    ],
+    [kpisPainel]
+  )
 
   return (
     <Layout title="Dashboard Executivo — Diretoria">
@@ -98,47 +219,54 @@ export default function Diretoria() {
         subtitle="Controle total dos fluxos financeiros: histórico de tudo que a IA detectou nos perfis Analista e Gerente, com trilha para questionamentos."
       />
 
-      <PainelGraficosIA data={metricasIA} />
+      <ModuloSelector modulos={MODULOS_DIRETORIA} ativo={modulo} onChange={setModulo} />
 
+      {(modulo === 'dashboard' || modulo === 'historico' || modulo === 'alertas') && (
+      <FiltrosMovimentacao
+        periodo={periodo}
+        onPeriodoChange={setPeriodo}
+        datasReferencia={datasReferencia}
+        somenteFraude={somenteFraude}
+        onSomenteFraudeChange={setSomenteFraude}
+        totalVisivel={totalVisivel}
+        totalGeral={totalMovimentos}
+      />
+      )}
+
+      {modulo === 'dashboard' && (
+        <>
+          <IndicadoresExecutivos kpis={kpisPainel} periodo={periodo} />
+          <PainelGraficosIA data={metricasExibir} />
+        </>
+      )}
+
+      {modulo === 'historico' && (
       <HistoricoControleIA
-        data={historicoIA}
+        data={historicoFiltrado}
+        periodo={periodo}
+        somenteFraude={somenteFraude}
         onVerPagamento={(id) => setDetalhePagamentoId(id)}
       />
-      {kpis && (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-          {[
-            { label: 'Saldo total contas', value: `R$ ${kpis.saldo_total_contas.toLocaleString('pt-BR')}` },
-            { label: 'Remessas', value: kpis.total_remessas },
-            { label: 'Valor aprovado', value: `R$ ${kpis.valor_total_aprovado.toLocaleString('pt-BR')}` },
-            { label: 'PJ não cadastrados', value: kpis.pagamentos_nao_cadastrados },
-            { label: 'PF não cadastradas', value: kpis.pagamentos_pf_nao_cadastrados ?? 0 },
-            { label: 'Fraudes IA', value: kpis.fraudes_detectadas },
-          ].map((c) => (
-            <div
-              key={c.label}
-              className="p-4 rounded-xl border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950"
-            >
-              <p className="text-xs text-slate-500 uppercase">{c.label}</p>
-              <p className="text-xl font-bold mt-1">{c.value}</p>
-            </div>
-          ))}
+      )}
+
+      {modulo === 'contas' && (
+        <div className="mb-8">
+          <ContasPanel ocultarReceita />
         </div>
       )}
 
-      <div className="mb-8">
-        <ContasPanel />
-      </div>
-
-      <section className="mb-8 rounded-xl border border-red-800/50 bg-red-950/20 p-5">
+      {modulo === 'alertas' && (
+      <>
+      <section className="mb-8 rounded-xl border border-red-700/60 bg-red-950/30 p-5">
         <h2 className="font-semibold text-red-300 mb-4">Detecções da IA (ML + GenAI)</h2>
         <p className="text-sm text-slate-400 mb-4">
           Alertas gerados após envio ao gerente, com justificativas e histórico de reanálises.
         </p>
-        {deteccoes.length === 0 ? (
-          <p className="text-slate-500 text-sm">Nenhuma detecção registrada.</p>
+        {deteccoesF.length === 0 ? (
+          <p className="text-slate-500 text-sm">Nenhuma detecção para os filtros selecionados.</p>
         ) : (
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {deteccoes.map((d) => (
+            {deteccoesF.map((d) => (
               <div key={d.pagamento_id} className="p-3 rounded-lg bg-slate-900 border border-slate-700 text-sm">
                 <div className="flex justify-between gap-2 flex-wrap">
                   <span>
@@ -182,8 +310,8 @@ export default function Diretoria() {
           Todos os pagamentos com documentação conferida pelo gerente aparecem aqui para acompanhamento
           executivo, mesmo após revisão em conformidade.
         </p>
-        {pontosAtencao.length === 0 ? (
-          <p className="text-slate-500 text-sm">Nenhum ponto de atenção registrado.</p>
+        {pontosF.length === 0 ? (
+          <p className="text-slate-500 text-sm">Nenhum ponto de atenção para os filtros selecionados.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -197,7 +325,7 @@ export default function Diretoria() {
                 </tr>
               </thead>
               <tbody>
-                {pontosAtencao.map((p) => (
+                {pontosF.map((p) => (
                   <tr key={p.pagamento_id} className="border-b border-slate-800/50">
                     <td className="py-2">
                       {p.beneficiario_nome}
@@ -243,8 +371,8 @@ export default function Diretoria() {
         <p className="text-sm text-slate-400 mb-4">
           Pagamentos a pessoas físicas fora da base de RH. Limite R$ 10.000. Salário exige competência (MM/AAAA).
         </p>
-        {pfNaoCad.length === 0 ? (
-          <p className="text-slate-500 text-sm">Nenhum alerta de PF não cadastrada.</p>
+        {pfNaoCadF.length === 0 ? (
+          <p className="text-slate-500 text-sm">Nenhum alerta de PF para os filtros selecionados.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
@@ -256,7 +384,7 @@ export default function Diretoria() {
               </tr>
             </thead>
             <tbody>
-              {pfNaoCad.map((p) => (
+              {pfNaoCadF.map((p) => (
                 <tr key={p.pagamento_id} className="border-b border-slate-800/50">
                   <td className="py-2">
                     {p.nome}
@@ -282,8 +410,8 @@ export default function Diretoria() {
         <p className="text-sm text-slate-400 mb-4">
           Limite R$ 10.000 por operação. Exige justificativa gerencial e aparece neste painel.
         </p>
-        {naoCad.length === 0 ? (
-          <p className="text-slate-500 text-sm">Nenhum pagamento excepcional registrado.</p>
+        {naoCadF.length === 0 ? (
+          <p className="text-slate-500 text-sm">Nenhum pagamento excepcional para os filtros selecionados.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -297,7 +425,7 @@ export default function Diretoria() {
                 </tr>
               </thead>
               <tbody>
-                {naoCad.map((p) => (
+                {naoCadF.map((p) => (
                   <tr key={p.pagamento_id} className="border-b border-slate-800/50">
                     <td className="py-2">{p.fornecedor}</td>
                     <td className="py-2">R$ {p.valor.toLocaleString('pt-BR')}</td>
@@ -315,12 +443,16 @@ export default function Diretoria() {
           </div>
         )}
       </section>
+      </>
+      )}
 
+      {modulo === 'auditoria' && (
+      <>
       <div className="grid lg:grid-cols-2 gap-8 mb-8">
-        <div className="p-5 rounded-xl border border-slate-800 bg-slate-900/50 h-72">
-          <h2 className="font-semibold mb-4">Visão operacional</h2>
+        <div className="p-5 rounded-xl border border-slate-600/60 bg-slate-900/70 h-72">
+          <h2 className="font-semibold text-white mb-4">Visão operacional</h2>
           <ResponsiveContainer width="100%" height="85%">
-            <BarChart data={chartData}>
+            <BarChart data={chartDataAuditoria}>
               <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
               <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} />
               <YAxis stroke="#94a3b8" />
@@ -333,7 +465,7 @@ export default function Diretoria() {
         <div className="p-5 rounded-xl border border-slate-800 bg-slate-900/50">
           <h2 className="font-semibold mb-4">Alertas IA</h2>
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {alertas.map((a) => (
+            {alertasF.map((a) => (
               <button
                 key={a.id}
                 onClick={() => setSelected(a)}
@@ -373,7 +505,7 @@ export default function Diretoria() {
               </tr>
             </thead>
             <tbody>
-              {logs.map((l) => (
+              {logsF.map((l) => (
                 <tr key={l.id} className="border-b border-slate-800/50">
                   <td className="py-2 text-slate-400">
                     {new Date(l.created_at).toLocaleString('pt-BR')}
@@ -386,6 +518,8 @@ export default function Diretoria() {
           </table>
         </div>
       </section>
+      </>
+      )}
 
       {detalhePagamentoId && (
         <PagamentoDetalheModal

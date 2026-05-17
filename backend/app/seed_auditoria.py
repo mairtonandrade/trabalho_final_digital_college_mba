@@ -6,7 +6,14 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.orm import Session
 
-from app.models import AuditLog, Colaborador, Fornecedor, Pagamento
+from app.models import (
+    AuditLog,
+    Colaborador,
+    Fornecedor,
+    Pagamento,
+    PagamentoAnaliseIA,
+    Remessa,
+)
 
 ACOES_REMESSA = [
     ("remessa_criada", "analista"),
@@ -145,3 +152,89 @@ def enriquecer_pagamentos_diretoria(db: Session) -> int:
             n += 1
     db.commit()
     return n
+
+
+def enriquecer_reanalises_gerente(db: Session, meta_minima: int = 14) -> int:
+    """
+    Garante registros reanalise_gerente para o gráfico da Diretoria.
+    Em bancos antigos o seed só gerava ~1 reanálise; idempotente.
+    """
+    existentes = (
+        db.query(PagamentoAnaliseIA)
+        .filter(PagamentoAnaliseIA.triggered_by == "reanalise_gerente")
+        .count()
+    )
+    if existentes >= meta_minima:
+        return 0
+
+    rng = random.Random(88)
+    inseridos = 0
+    pags = (
+        db.query(Pagamento)
+        .filter(Pagamento.ia_analisado == 1)
+        .order_by(Pagamento.id.asc())
+        .all()
+    )
+
+    for pag in pags:
+        if existentes + inseridos >= meta_minima:
+            break
+        ja_tem = (
+            db.query(PagamentoAnaliseIA)
+            .filter(
+                PagamentoAnaliseIA.pagamento_id == pag.id,
+                PagamentoAnaliseIA.triggered_by == "reanalise_gerente",
+            )
+            .first()
+        )
+        if ja_tem:
+            continue
+        rem = db.query(Remessa).filter(Remessa.id == pag.remessa_id).first()
+        if not rem or rem.status not in (
+            "liberada_banco",
+            "aguardando_gerente",
+            "devolvida_analista",
+        ):
+            continue
+        if not (
+            pag.revisado_gerente
+            or (pag.risk_score or 0) >= 0.5
+            or pag.ml_fraude_detectada
+        ):
+            continue
+        if rng.random() > 0.32:
+            continue
+
+        ultima = (
+            db.query(PagamentoAnaliseIA)
+            .filter(PagamentoAnaliseIA.pagamento_id == pag.id)
+            .order_by(PagamentoAnaliseIA.versao.desc())
+            .first()
+        )
+        versao = (ultima.versao + 1) if ultima else 2
+        base_dt = ultima.created_at if ultima and ultima.created_at else pag.created_at
+        if not base_dt:
+            base_dt = datetime.utcnow()
+        dt = base_dt + timedelta(hours=rng.randint(3, 48))
+
+        db.add(
+            PagamentoAnaliseIA(
+                pagamento_id=pag.id,
+                versao=versao,
+                triggered_by="reanalise_gerente",
+                risk_score=pag.risk_score,
+                risk_level=pag.risk_level,
+                heuristic_flags=pag.heuristic_flags,
+                ml_score=pag.ml_score,
+                ml_fraude_detectada=pag.ml_fraude_detectada,
+                ml_motivos=pag.ml_motivos,
+                genai_parecer=pag.genai_parecer,
+                dados_conferem=pag.dados_conferem,
+                created_at=dt,
+            )
+        )
+        inseridos += 1
+
+    if inseridos:
+        db.commit()
+    return inseridos

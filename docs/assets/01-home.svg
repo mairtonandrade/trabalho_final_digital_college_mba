@@ -1,24 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" fill="none">
-  <rect width="960" height="540" fill="#0b0f1a"/>
-  <rect x="0" y="0" width="960" height="64" fill="#0f172a" opacity="0.9"/>
-  <circle cx="48" cy="32" r="18" fill="url(#g1)"/>
-  <text x="48" y="37" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700">GP</text>
-  <text x="80" y="38" fill="#e2e8f0" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600">Guardião de Pagamentos</text>
-  <text x="860" y="38" fill="#34d399" font-family="Segoe UI,sans-serif" font-size="12">Documentação ’</text>
-  <text x="480" y="120" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI,sans-serif" font-size="11">MBA Digital College · Ciência de Dados &amp; GenAI</text>
-  <text x="480" y="165" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="28" font-weight="700">Governança financeira com</text>
-  <text x="480" y="200" text-anchor="middle" fill="url(#g1)" font-family="Segoe UI,sans-serif" font-size="28" font-weight="700">inteligência artificial</text>
-  <rect x="180" y="240" width="140" height="56" rx="12" fill="#121829" stroke="#334155"/>
-  <rect x="340" y="240" width="140" height="56" rx="12" fill="#121829" stroke="#334155"/>
-  <rect x="500" y="240" width="140" height="56" rx="12" fill="#121829" stroke="#334155"/>
-  <rect x="660" y="240" width="140" height="56" rx="12" fill="#121829" stroke="#334155"/>
-  <text x="480" y="330" text-anchor="middle" fill="#64748b" font-family="Segoe UI,sans-serif" font-size="12">Selecione seu perfil</text>
-  <rect x="80" y="360" width="250" height="140" rx="16" fill="#121829" stroke="#06b6d4" opacity="0.5"/>
-  <rect x="355" y="360" width="250" height="140" rx="16" fill="#121829" stroke="#8b5cf6" opacity="0.5"/>
-  <rect x="630" y="360" width="250" height="140" rx="16" fill="#121829" stroke="#10b981" opacity="0.5"/>
-  <text x="205" y="400" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600">Analista</text>
-  <text x="480" y="400" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600">Gerente</text>
-  <text x="755" y="400" text-anchor="middle" fill="white" font-family="Segoe UI,sans-serif" font-size="14" font-weight="600">Diretoria</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <rect width="1200" height="675" fill="#0b0f1a"/>
+  <rect x="0" y="0" width="1200" height="72" fill="#020617"/>
+  <circle cx="56" cy="36" r="22" fill="url(#g1)"/>
+  <text x="56" y="42" text-anchor="middle" fill="white" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="700">GP</text>
+  <text x="92" y="42" fill="#f1f5f9" font-family="Segoe UI,Arial,sans-serif" font-size="16" font-weight="600">Guardi&#227;o de Pagamentos</text>
+  <text x="1080" y="42" text-anchor="end" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="13">Documenta&#231;&#227;o</text>
+  <rect x="380" y="88" width="440" height="28" rx="14" fill="#064e3b" stroke="#10b981"/>
+  <text x="600" y="107" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI,Arial,sans-serif" font-size="12">MBA Digital College &#183; Ci&#234;ncia de Dados &amp; GenAI</text>
+  <text x="600" y="168" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">Governan&#231;a financeira com</text>
+  <text x="600" y="208" text-anchor="middle" fill="url(#g1)" font-family="Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">intelig&#234;ncia artificial</text>
+  <text x="600" y="248" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="15">Plataforma de aprova&#231;&#227;o de pagamentos com IA</text>
+  <rect x="200" y="278" width="190" height="58" rx="12" fill="#1e293b" stroke="#475569"/>
+  <rect x="410" y="278" width="190" height="58" rx="12" fill="#1e293b" stroke="#475569"/>
+  <rect x="620" y="278" width="190" height="58" rx="12" fill="#1e293b" stroke="#475569"/>
+  <rect x="830" y="278" width="190" height="58" rx="12" fill="#1e293b" stroke="#475569"/>
+  <text x="295" y="305" text-anchor="middle" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">XGBoost</text>
+  <text x="505" y="305" text-anchor="middle" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">GenAI</text>
+  <text x="715" y="305" text-anchor="middle" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">Dupla aprova&#231;&#227;o</text>
+  <text x="925" y="305" text-anchor="middle" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">Trilha WORM</text>
+  <text x="600" y="368" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Arial,sans-serif" font-size="14">Selecione seu perfil para continuar</text>
+  <rect x="80" y="400" width="320" height="200" rx="16" fill="#0f172a" stroke="#06b6d4" stroke-width="2"/>
+  <rect x="440" y="400" width="320" height="200" rx="16" fill="#0f172a" stroke="#8b5cf6" stroke-width="2"/>
+  <rect x="800" y="400" width="320" height="200" rx="16" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+  <text x="240" y="460" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="18" font-weight="700">Analista Financeiro</text>
+  <text x="600" y="460" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="18" font-weight="700">Gerente Financeiro</text>
+  <text x="960" y="460" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Arial,sans-serif" font-size="18" font-weight="700">Diretoria</text>
+  <text x="240" y="500" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="12">Remessas e cadastros</text>
+  <text x="600" y="500" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="12">Revis&#227;o ML e libera&#231;&#227;o</text>
+  <text x="960" y="500" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Arial,sans-serif" font-size="12">KPIs e auditoria IA</text>
+  <text x="240" y="565" text-anchor="middle" fill="#22d3ee" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="600">Acessar painel</text>
+  <text x="600" y="565" text-anchor="middle" fill="#a78bfa" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="600">Acessar painel</text>
+  <text x="960" y="565" text-anchor="middle" fill="#34d399" font-family="Segoe UI,Arial,sans-serif" font-size="13" font-weight="600">Acessar painel</text>
   <defs>
     <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
       <stop stop-color="#10b981"/><stop offset="1" stop-color="#14b8a6"/>

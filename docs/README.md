@@ -16,7 +16,7 @@
 
 ## Telas do sistema
 
-> O GitHub não exibe arquivos `.svg` inline no Markdown. Use as imagens **PNG** abaixo (fonte editável em `assets/*.svg`).
+> Imagens **PNG** para o GitHub (acentuação correta em UTF-8). Fonte editável: `assets/*.svg`. Para regerar: `npx @resvg/resvg-js-cli --fit-width 1200 assets/NOME.svg assets/NOME.png` na pasta `docs`.
 
 | Tela | Preview |
 |------|---------|

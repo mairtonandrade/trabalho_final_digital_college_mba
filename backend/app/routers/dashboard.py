@@ -115,6 +115,7 @@ def deteccoes_ia(db: Session = Depends(get_db)):
                 "gerente_justificativa": rem.gerente_justificativa if rem else None,
                 "motivo_devolucao": rem.motivo_devolucao if rem else None,
                 "revisado_observacao": p.revisado_observacao,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
                 "historico_analises": [
                     {
                         "versao": h.versao,
@@ -167,6 +168,7 @@ def alertas_fraude(db: Session = Depends(get_db)):
                 "beneficiario_documento": p.beneficiario_documento,
                 "ml_fraude_detectada": bool(p.ml_fraude_detectada),
                 "ml_motivos": p.ml_motivos,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
                 "fornecedor_razao_social": f.razao_social if f else p.beneficiario_nome,
                 "fornecedor_status": f.status if f else None,
             }
@@ -199,6 +201,8 @@ def pagamentos_pf_nao_cadastrados(db: Session = Depends(get_db)):
                 "risk_score": p.risk_score,
                 "gerente_justificativa": rem.gerente_justificativa if rem else None,
                 "genai_parecer": p.genai_parecer,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
+                "ml_fraude_detectada": bool(p.ml_fraude_detectada),
             }
         )
     return out
@@ -229,6 +233,8 @@ def pagamentos_nao_cadastrados(db: Session = Depends(get_db)):
                 "risk_score": p.risk_score,
                 "gerente_justificativa": rem.gerente_justificativa if rem else None,
                 "genai_parecer": p.genai_parecer,
+                "created_at": p.created_at.isoformat() if p.created_at else None,
+                "ml_fraude_detectada": bool(p.ml_fraude_detectada),
             }
         )
     return out
@@ -265,6 +271,7 @@ def pontos_atencao(db: Session = Depends(get_db)):
                 ml_fraude_detectada=bool(p.ml_fraude_detectada),
                 pf_nao_cadastrado=bool(p.pf_nao_cadastrado),
                 fornecedor_nao_cadastrado=bool(p.fornecedor_nao_cadastrado),
+                created_at=p.created_at.isoformat() if p.created_at else None,
             )
         )
     return out

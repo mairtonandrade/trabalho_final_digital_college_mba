@@ -69,7 +69,7 @@ export default function Home() {
               inteligência artificial
             </span>
           </h1>
-          <p className="text-slate-400 text-lg leading-relaxed">
+          <p className="text-slate-200 text-lg leading-relaxed">
             Plataforma corporativa para aprovação de pagamentos com detecção de fraudes,
             revisão documental e auditoria em conformidade com as melhores práticas.
           </p>
@@ -79,12 +79,12 @@ export default function Home() {
           {features.map((f) => (
             <div key={f.label} className="glass-card p-3 text-center">
               <p className="text-xs font-semibold text-emerald-400">{f.label}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">{f.desc}</p>
+              <p className="text-[10px] text-slate-300 mt-0.5">{f.desc}</p>
             </div>
           ))}
         </div>
 
-        <p className="text-sm text-slate-500 mb-6">Selecione seu perfil para continuar</p>
+        <p className="text-sm text-slate-300 mb-6 font-medium">Selecione seu perfil para continuar</p>
 
         <div className="grid md:grid-cols-3 gap-5 w-full max-w-5xl">
           {personas.map((p) => (
@@ -100,7 +100,7 @@ export default function Home() {
               <span className="text-3xl mb-4 block">{p.icon}</span>
               <div className={`h-1 w-12 rounded-full bg-gradient-to-r ${p.color} mb-4`} />
               <h2 className="text-lg font-bold text-white mb-2">{p.title}</h2>
-              <p className="text-slate-400 text-sm leading-relaxed mb-4">{p.desc}</p>
+              <p className="text-slate-200 text-sm leading-relaxed mb-4">{p.desc}</p>
               <span
                 className={`text-sm font-semibold bg-gradient-to-r ${p.color} bg-clip-text text-transparent`}
               >

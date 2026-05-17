@@ -172,6 +172,7 @@ export interface Pagamento {
   anexos?: PagamentoAnexo[]
   documentos_completos?: boolean
   ia_analisado?: number
+  created_at?: string
   codigo_pagamento?: string
   historico_analises?: PagamentoAnaliseIA[]
   fornecedor_razao_social?: string
@@ -183,6 +184,7 @@ export interface PontoAtencao {
   remessa_id: number
   remessa_status?: string
   remessa_titulo?: string
+  created_at?: string
   tipo_beneficiario: string
   tipo_despesa: string
   beneficiario_nome?: string
@@ -222,6 +224,7 @@ export interface DeteccaoIA {
   codigo_pagamento: string
   remessa_id: number
   remessa_status?: string
+  created_at?: string
   valor: number
   beneficiario_nome?: string
   risk_score: number
@@ -280,6 +283,9 @@ export interface HistoricoControleIAItem {
   gerente_justificativa?: string | null
   motivo_devolucao?: string | null
   revisado_observacao?: string
+  fornecedor_nao_cadastrado?: boolean
+  pf_nao_cadastrado?: boolean
+  created_at?: string | null
   eventos_fluxo: EventoFluxoIA[]
   analises_ia: AnaliseIAVersao[]
 }
@@ -288,6 +294,8 @@ export interface HistoricoControleIAResponse {
   resumo: {
     total_registros: number
     fraudes_ml: number
+    execucoes_ia?: number
+    remessas_distintas?: number
     eventos_por_perfil?: Record<string, number>
   }
   itens: HistoricoControleIAItem[]
@@ -321,6 +329,8 @@ export interface PagamentoPFNaoCadastrado {
   pagamento_id: number
   remessa_id: number
   remessa_status?: string
+  created_at?: string
+  ml_fraude_detectada?: boolean
   nome?: string
   cpf?: string
   valor: number
@@ -346,7 +356,9 @@ export interface PagamentoNaoCadastrado {
   pagamento_id: number
   remessa_id: number
   remessa_status?: string
+  created_at?: string
   valor: number
+  ml_fraude_detectada?: boolean
   fornecedor?: string
   cnpj?: string
   status_fornecedor?: string

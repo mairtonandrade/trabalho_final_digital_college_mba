@@ -176,6 +176,7 @@ const DETECCOES: DeteccaoIA[] = [
     codigo_pagamento: 'PAY-000101',
     remessa_id: 26,
     remessa_status: 'aguardando_gerente',
+    created_at: dt(2),
     valor: 287_500,
     beneficiario_nome: 'Tech Solutions Ltda',
     risk_score: 0.88,
@@ -193,6 +194,7 @@ const DETECCOES: DeteccaoIA[] = [
     codigo_pagamento: 'PAY-000042',
     remessa_id: 8,
     remessa_status: 'liberada_banco',
+    created_at: dt(45),
     valor: 215_000,
     beneficiario_nome: 'Logística Brasil S.A.',
     risk_score: 0.76,
@@ -537,6 +539,30 @@ export function resolveDemoResponse(config: InternalAxiosRequestConfig): unknown
     if (status === 'aguardando_gerente') return [REM_CATALOGO]
     if (status === 'devolvida_analista') return [REM_DEVOLVIDA]
     if (status === 'liberada_banco') return [REM_LIBERADA]
+    if (params.historico_ia) {
+      const pagLiberada: Pagamento = {
+        ...PAG_FRAUDE,
+        id: 42,
+        remessa_id: 8,
+        ml_fraude_detectada: 1,
+        created_at: dt(45),
+      }
+      const pagDevolvido: Pagamento = {
+        ...PAG_FRAUDE,
+        id: 55,
+        remessa_id: 12,
+        valor: 98_000,
+        ml_fraude_detectada: 0,
+        risk_level: 'medio',
+        risk_score: 0.58,
+        created_at: dt(20),
+      }
+      return [
+        REM_CATALOGO,
+        { ...REM_LIBERADA, pagamentos: [pagLiberada] },
+        { ...REM_DEVOLVIDA, pagamentos: [pagDevolvido] },
+      ]
+    }
     return [REM_CATALOGO, REM_DEVOLVIDA, REM_LIBERADA]
   }
   if (url.includes('/pagamentos/')) return PAG_FRAUDE
