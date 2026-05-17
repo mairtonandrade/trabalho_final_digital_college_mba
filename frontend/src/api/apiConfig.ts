@@ -7,7 +7,3 @@ export function isDemoMode(): boolean {
   return import.meta.env.PROD && !import.meta.env.VITE_API_URL
 }
 
-export function apiBaseLabel(): string {
-  if (isDemoMode()) return 'Modo demonstração (dados locais)'
-  return import.meta.env.VITE_API_URL || '/api'
-}
