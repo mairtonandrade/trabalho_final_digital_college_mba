@@ -25,7 +25,9 @@ ai_models/*.csv
 .idea/
 .vscode/
 
-# Apresentações locais que não devem ir ao GitHub
+# Apresentações locais que não devem ir ao GitHub (cópias na raiz; o pitch oficial está em docs/apresentacoes/)
 Guardião_de_Pagamentos_-_Pitch_Deck.pdf
 Módulo 4 - Esp DC GenAI.pptx.pdf
 *Esp DC GenAI*
+*Modulo 4*
+*Módulo 4*
