@@ -8,6 +8,7 @@ Pasta dedicada ao **treinamento**, **resultados**, **dicionário de detecções*
 
 | Documento | Conteúdo |
 |-----------|----------|
+| [**08 — Vínculo treino → runtime**](08-vinculo-treinamento-e-runtime.md) | **Base de treino, features, `.pkl` e atuação no sistema (documento principal de rastreio)** |
 | [01 — Treinamento do modelo](01-treinamento-do-modelo.md) | Dataset, features, hiperparâmetros, como retreinar |
 | [02 — Resultados e métricas](02-resultados-e-metricas.md) | F1, AUC, limiar, métricas da demo |
 | [03 — Dicionário de detecções](03-dicionario-de-deteccoes.md) | Todos os códigos, campos e tipos de alerta |

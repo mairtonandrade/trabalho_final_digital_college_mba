@@ -1,5 +1,7 @@
 # 01 — Treinamento do modelo XGBoost
 
+> **Leia também:** [08 — Vínculo treinamento e runtime](08-vinculo-treinamento-e-runtime.md) — liga esta base e o `.pkl` à inferência no Guardião (feature a feature, limiar, telas e auditoria).
+
 ## Objetivo
 
 Treinar um classificador binário (**fraude / não fraude**) para apoiar a aprovação de pagamentos. O modelo **não libera nem bloqueia sozinho** — ele gera `ml_score`, `ml_fraude_detectada` e motivos explicáveis para o gerente decidir.
@@ -19,6 +21,22 @@ O script `ai_models/train_model.py` tenta, nesta ordem:
 
 1. **Kaggle** — dataset [Online Payments Fraud Detection](https://www.kaggle.com/datasets/rupakroy/online-payments-fraud-detection-dataset) via `kagglehub` (até 200.000 linhas).
 2. **Sintético** — 60.000 registros gerados localmente se o Kaggle não estiver disponível.
+
+### Rótulo `isFraud` na base sintética
+
+Cada linha recebe `isFraud = 1` se **qualquer** condição for verdadeira (e sorteio de 75% aplicar o positivo):
+
+| Condição | Limiar |
+|----------|--------|
+| Valor | `amount > 120_000` |
+| Saldo | `balance_diff > amount × 0,08` |
+| Velocity | `velocity_proxy > 0,38` |
+| Não cadastrado | `nao_cadastrado = 1` (~12% das linhas) |
+| Liquidez | `valor_sobre_saldo > 0,5` |
+
+Código: `build_synthetic()` em `ai_models/train_model.py`. Essas regras foram escolhidas para alinhar ao que o runtime sinaliza em `analisar_fraude()` (valor alto, liquidez, velocity, cadastro).
+
+Na base **Kaggle**, o rótulo é a coluna original `isFraud` do dataset (fraude observada nas transações do CSV).
 
 ### Features de entrada (6 variáveis)
 

@@ -29,6 +29,7 @@ Pasta dedicada: **[modelo-ia/](modelo-ia/README.md)**
 | [Dicionário](modelo-ia/03-dicionario-de-deteccoes.md) | Códigos, campos, endpoints |
 | [Processo completo](modelo-ia/04-processo-completo-ia.md) | Pipeline no dia a dia |
 | [Mapa de nomenclaturas](modelo-ia/05-mapa-de-nomenclaturas.md) | Glossário e gráficos |
+| [**Vínculo treino → runtime**](modelo-ia/08-vinculo-treinamento-e-runtime.md) | Base de treino, `.pkl` e atuação no sistema |
 
 ## Telas do sistema
 

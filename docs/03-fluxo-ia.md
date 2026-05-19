@@ -41,4 +41,6 @@ Endpoint `GET /api/dashboard/deteccoes-ia` lista pagamentos com:
 
 Gera `ai_models/detector_fraudes_v1.pkl` usado em runtime.
 
-**Documentação completa:** [`modelo-ia/README.md`](modelo-ia/README.md) (treinamento, métricas, dicionário de detecções, processo e mapa de nomenclaturas).
+**Documentação completa:** [`modelo-ia/README.md`](modelo-ia/README.md).
+
+**Vínculo treino → sistema:** [`modelo-ia/08-vinculo-treinamento-e-runtime.md`](modelo-ia/08-vinculo-treinamento-e-runtime.md) — como a base de treino e o `.pkl` atuam no Guardião após o envio da remessa.

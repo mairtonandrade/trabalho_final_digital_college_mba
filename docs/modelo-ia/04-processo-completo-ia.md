@@ -1,5 +1,7 @@
 # 04 — Processo completo da IA no dia a dia
 
+> **Rastreio treino → produção:** [08 — Vínculo treinamento e runtime](08-vinculo-treinamento-e-runtime.md) (base Kaggle/sintética, `.pkl`, `ml_score` nas telas).
+
 ## Visão geral
 
 ```mermaid
