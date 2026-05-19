@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { isDemoMode } from '../api/apiConfig'
 import { demoSnapshotMeta } from '../api/demoSnapshotData'
@@ -35,6 +36,14 @@ export default function Layout({
   const location = useLocation()
   const nav = role ? navByRole[role] : []
   const demoMeta = isDemoMode() ? demoSnapshotMeta() : null
+  const [buildVer, setBuildVer] = useState<string | null>(null)
+  useEffect(() => {
+    if (!isDemoMode()) return
+    fetch(`${import.meta.env.BASE_URL}version.json`, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => v?.commit && setBuildVer(String(v.commit)))
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -57,6 +66,7 @@ export default function Layout({
                     Demo {demoMeta.kpis_diretoria_esperados.pagamentos_analisados} pag. ·{' '}
                     {demoMeta.kpis_diretoria_esperados.execucoes_ia} IA ·{' '}
                     {demoMeta.kpis_diretoria_esperados.fraudes_ml} fraudes
+                    {buildVer ? ` · build ${buildVer}` : ''}
                   </p>
                 )}
               </div>

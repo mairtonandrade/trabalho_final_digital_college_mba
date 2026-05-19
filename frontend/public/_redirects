@@ -1,1 +1,10 @@
-/*    /index.html   200
+# Arquivos estáticos (devem vir ANTES do catch-all SPA)
+/demoSnapshot.json  /demoSnapshot.json  200
+/favicon.svg        /favicon.svg        200
+/version.json       /version.json       200
+
+# Assets com hash (Vite)
+/assets/*           /assets/:splat      200
+
+# SPA — rotas React
+/*                  /index.html         200

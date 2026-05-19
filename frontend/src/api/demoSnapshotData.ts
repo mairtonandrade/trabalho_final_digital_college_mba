@@ -59,7 +59,14 @@ export async function initDemoSnapshot(): Promise<DemoSnapshot> {
       if (!res.ok) {
         throw new Error(`Falha ao carregar demoSnapshot.json (${res.status})`)
       }
-      return res.json() as Promise<DemoSnapshot>
+      const ct = res.headers.get('content-type') || ''
+      const raw = await res.text()
+      if (ct.includes('text/html') || raw.trimStart().startsWith('<!')) {
+        throw new Error(
+          'demoSnapshot.json retornou HTML (redirect SPA). No Netlify: publique o deploy mais recente e use Deploy without cache. Ver docs/04-deploy-netlify.md'
+        )
+      }
+      return JSON.parse(raw) as DemoSnapshot
     })
     .then((data) => {
       const k = data.meta?.kpis_diretoria_esperados

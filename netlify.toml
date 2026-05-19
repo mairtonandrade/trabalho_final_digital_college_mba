@@ -1,6 +1,6 @@
 [build]
   base = "frontend"
-  command = "npm ci && npm run demo:verify && npm run build"
+  command = "npm ci && npm run demo:verify && npm run build && node -e \"const fs=require('fs');const p='dist/demoSnapshot.json';if(!fs.existsSync(p)||fs.statSync(p).size<100000)throw new Error('dist/demoSnapshot.json ausente ou pequeno');console.log('OK demoSnapshot',fs.statSync(p).size)\""
   publish = "dist"
 
 # Modo demo obrigatório no Netlify (sem backend). Para API real, defina VITE_API_URL no painel.
@@ -8,9 +8,4 @@
   NODE_VERSION = "20"
   VITE_DEMO_MODE = "true"
 
-# SPA: todas as rotas (/analista, /gerente, /diretoria) servem index.html
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
+# Redirects SPA: ver frontend/public/_redirects (não duplicar /* aqui — quebrava /demoSnapshot.json)

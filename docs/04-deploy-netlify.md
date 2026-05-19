@@ -1,5 +1,18 @@
 # 04 — Deploy no Netlify
 
+## Diagnóstico rápido (produção)
+
+| Teste | URL | Resultado esperado |
+|-------|-----|-------------------|
+| Snapshot | `/demoSnapshot.json` | JSON ~1 MB, início com `{"meta":` |
+| Versão do build | `/version.json` | `{"commit":"abc1234",...}` |
+| Bundle | Ver código-fonte de `/` | `index-*.js` **diferente** do deploy anterior |
+| Header app | Qualquer painel | `Demo 96 pag. · 110 IA · 24 fraudes · build xxx` |
+
+Se `/demoSnapshot.json` abrir como **página HTML** do app → redirect SPA engoliu o arquivo (corrigido em `_redirects`) ou deploy antigo ainda em produção.
+
+---
+
 ## Opções em *Trigger deploy*
 
 | Opção | O que faz | Quando usar |
