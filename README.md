@@ -17,6 +17,7 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 | **Plano SaaS (negócio, infra, suporte, LGPD)** | [`docs/comercial-saas/`](docs/comercial-saas/README.md) |
 | Deploy Netlify | [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md) |
 | Roteiro de apresentação | [`docs/05-apresentacao.md`](docs/05-apresentacao.md) |
+| Pitch Deck (PDF) | [`docs/apresentacoes/Guardiao-de-Pagamentos-Pitch-Deck.pdf`](docs/apresentacoes/Guardiao-de-Pagamentos-Pitch-Deck.pdf) |
 | Guia no app | [`GUIA_UTILIZACAO.md`](GUIA_UTILIZACAO.md) |
 
 Telas e fluxo completo: [`docs/README.md`](docs/README.md#telas-do-sistema) (`docs/assets/01`–`06`).

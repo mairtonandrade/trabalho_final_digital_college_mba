@@ -4,6 +4,12 @@
 
 > **Comece aqui:** [00 — Guia mestre](00-guia-mestre.md) — trilhas por perfil (banca, dev, usuário, ML) e mapa de toda a documentação.
 
+## Apresentações
+
+| Material | Arquivo |
+|----------|---------|
+| Pitch Deck — Guardião de Pagamentos | [Guardiao-de-Pagamentos-Pitch-Deck.pdf](apresentacoes/Guardiao-de-Pagamentos-Pitch-Deck.pdf) |
+
 ## Conteúdo
 
 | Documento | Descrição |
