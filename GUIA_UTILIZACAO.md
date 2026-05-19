@@ -40,12 +40,14 @@ O **Guardião de Pagamentos** é uma plataforma web de governança financeira qu
 
 ### 2.2 Como o modelo atua em produção
 
-1. Ao **adicionar um pagamento**, o backend monta o vetor de features com dados reais da remessa.
-2. O XGBoost retorna **probabilidade de fraude** (`ml_score`).
-3. Se `ml_score ≥ 55%` → `ml_fraude_detectada = true` e motivos explicativos são gravados.
-4. O score ML compõe o **risco final** junto com regras heurísticas e conferência documental.
-5. A **GenAI** recebe o contexto (incluindo alerta ML) e gera o parecer para o gerente/diretoria.
-6. Ao **enviar a remessa**, pagamentos com fraude ML **bloqueiam** o envio até correção.
+> Documentação completa: [`docs/modelo-ia/08-vinculo-treinamento-e-runtime.md`](docs/modelo-ia/08-vinculo-treinamento-e-runtime.md)
+
+1. Ao **enviar a remessa ao gerente** (ou na **reanálise** pelo gerente), a IA roda **em lote** para cada pagamento — não ao adicionar cada linha.
+2. O backend monta o vetor de 6 features e o XGBoost retorna **probabilidade de fraude** (`ml_score`).
+3. Se `ml_score ≥ 55%` → `ml_fraude_detectada = 1` e motivos explicativos são gravados.
+4. O score ML compõe o **risco final** (50% ML + 30% heurística + penalidade documental).
+5. A **GenAI** gera o parecer com prefixo de alerta ML quando aplicável.
+6. O **gerente** revisa e pode liberar (com **justificativa obrigatória** se fraude ML, não cadastrado ou alto risco) ou devolver ao analista.
 
 ### 2.3 Retreinar o modelo
 
@@ -88,8 +90,8 @@ Body: { "valor": 200000, "saldo_conta": 500000, "fornecedor_nao_cadastrado": tru
    - **PJ:** fornecedor da whitelist (ou pendente, máx. R$ 10.000)
    - **PF:** colaborador RH ou CPF manual (não cadastrado, máx. R$ 10.000)
    - **Salário:** PF + tipo Salário + competência `MM/AAAA` + holerite
-5. Leia o alerta **Modelo ML** (vermelho = fraude detectada).
-6. **Enviar à gerência** — só funciona se não houver fraude ML bloqueando.
+5. **Enviar à gerência** — dispara a análise IA em lote para todos os pagamentos da remessa.
+6. Após o envio, o gerente verá scores ML, motivos e parecer GenAI (o analista não revisa IA antes do envio).
 
 #### O que o ML valida para você
 - Valor atípico vs. saldo da conta
@@ -103,7 +105,7 @@ Body: { "valor": 200000, "saldo_conta": 500000, "fornecedor_nao_cadastrado": tru
 | Pagamento R$ 250.000 | ML tende a marcar fraude |
 | CPF não cadastrado + R$ 15.000 | Bloqueio por limite ou alerta |
 | Arquivo `nota_fake.pdf` | GenAI marca divergência documental |
-| Remessa com fraude ML | Botão enviar bloqueado pela API |
+| Remessa com fraude ML | Gerente vê alerta; liberação exige justificativa |
 
 ---
 

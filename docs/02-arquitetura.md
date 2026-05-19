@@ -52,3 +52,12 @@ trabalho_final_digital_college_mba/
 | Analista | Cadastros, remessas, anexos, envio IA |
 | Gerente | Revisão documental, devolução, liberação |
 | Diretoria | KPIs, detecções, pontos de atenção |
+
+## Aprofundamento
+
+| Tema | Documento |
+|------|-----------|
+| Backend (routers, services) | [09-construcao-backend](09-construcao-backend.md) |
+| Frontend (páginas, componentes) | [10-construcao-frontend](10-construcao-frontend.md) |
+| Objetivos → código | [11-como-objetivos-sao-alcancados](11-como-objetivos-sao-alcancados.md) |
+| Navegação geral | [00-guia-mestre](00-guia-mestre.md) |

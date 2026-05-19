@@ -2,10 +2,13 @@
 
 Índice do projeto MBA Digital College com passo a passo de implementação, fluxo de IA e deploy.
 
+> **Comece aqui:** [00 — Guia mestre](00-guia-mestre.md) — trilhas por perfil (banca, dev, usuário, ML) e mapa de toda a documentação.
+
 ## Conteúdo
 
 | Documento | Descrição |
 |-----------|-----------|
+| [**00 — Guia mestre**](00-guia-mestre.md) | Navegação completa e trilhas de leitura |
 | [01 — Planejamento](01-planejamento.md) | Objetivo, escopo e cronograma |
 | [02 — Arquitetura](02-arquitetura.md) | Stack, camadas e modelos de dados |
 | [03 — Fluxo de IA](03-fluxo-ia.md) | ML (XGBoost) + GenAI no envio da remessa |
@@ -13,6 +16,9 @@
 | [05 — Apresentação](05-apresentacao.md) | Roteiro de demo nos 3 perfis |
 | [06 — Catálogo de fraudes](06-catalogo-fraudes.md) | Todos os cenários ML/heurística/GenAI |
 | [07 — Mapa de dados demo](07-mapa-dados-demo.md) | Onde ver histórico, fraudes e saldos por perfil |
+| [09 — Construção backend](09-construcao-backend.md) | Routers, services, fluxo enviar remessa |
+| [10 — Construção frontend](10-construcao-frontend.md) | Páginas, componentes, API client |
+| [11 — Objetivos alcançados](11-como-objetivos-sao-alcancados.md) | Problema → funcionalidade → código → validação |
 
 ### Plano comercial e operação SaaS
 

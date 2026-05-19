@@ -8,6 +8,7 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 
 | Recurso | Link |
 |---------|------|
+| **Guia mestre (por onde começar)** | [`docs/00-guia-mestre.md`](docs/00-guia-mestre.md) |
 | Índice da documentação | [`docs/README.md`](docs/README.md) |
 | Planejamento | [`docs/01-planejamento.md`](docs/01-planejamento.md) |
 | Arquitetura | [`docs/02-arquitetura.md`](docs/02-arquitetura.md) |
