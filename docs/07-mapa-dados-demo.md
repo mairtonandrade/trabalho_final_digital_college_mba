@@ -32,7 +32,7 @@ cd backend
 
 ## KPIs da Diretoria (seed padrão)
 
-Com banco recriado (`reseed_demo.py`) ou Netlify em modo demo (`demoSnapshot.json`):
+Com banco recriado (`reseed_demo.py`) ou Netlify em modo demo (`/demoSnapshot.json`):
 
 | Indicador | Valor |
 |-----------|-------|

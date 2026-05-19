@@ -1,73 +1,31 @@
-# React + TypeScript + Vite
+# Frontend — Guardião de Pagamentos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface React (Vite + Tailwind) dos perfis **Analista**, **Gerente** e **Diretoria**.
 
-Currently, two official plugins are available:
+Documentação completa: [docs/10-construcao-frontend.md](../docs/10-construcao-frontend.md) · [Guia mestre](../docs/00-guia-mestre.md)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Comandos
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+npm install
+npm run dev          # http://localhost:5173
+npm run build
+npm run demo:verify  # valida demoSnapshot.json (96/110/24)
+npm run demo:export  # regera snapshot a partir do seed do backend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Modo demo (Netlify)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Sem backend: carrega `/demoSnapshot.json` e mocka a API via `demoResolver.ts`.  
+Confirme no header: `Demo 96 pag. · 110 IA · 24 fraudes`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Ver [04-deploy-netlify.md](../docs/04-deploy-netlify.md).
+
+## Variáveis de ambiente
+
+| Variável | Uso |
+|----------|-----|
+| `VITE_API_URL` | URL da API (ex.: `http://127.0.0.1:8000/api`) |
+| `VITE_DEMO_MODE` | `true` força demo; `false` desliga |
+
+Arquivo exemplo: `.env.example`

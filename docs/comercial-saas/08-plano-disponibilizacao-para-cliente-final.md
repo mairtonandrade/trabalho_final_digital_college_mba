@@ -20,7 +20,7 @@ Documento-mestre para **comercializar, implantar e operar** o Guardião de Pagam
 | Trilha de auditoria WORM | Sim | `audit_logs`, `GET /dashboard/auditoria` |
 | PJ/PF não cadastrado, pontos de atenção | Sim | Endpoints em `dashboard.py` |
 | Catálogo de cenários de fraude (demo) | Sim | `backend/app/seed_cenarios_fraude.py` |
-| Deploy UI sem backend (demo) | Sim | `netlify.toml`, `demoSnapshot.json` |
+| Deploy UI sem backend (demo) | Sim | `netlify.toml`, `frontend/public/demoSnapshot.json` |
 | Login / multi-empresa / SSO | **Não** (roadmap) | Ver [06 — Roadmap](06-roadmap-produto-para-producao.md) |
 | PostgreSQL multi-tenant | **Não** (roadmap) | Ver [03 — Arquitetura](03-arquitetura-multi-cliente-e-infraestrutura.md) |
 
@@ -87,7 +87,7 @@ API e banco na infraestrutura do cliente; você entrega imagem Docker e playbook
 | Auditoria WORM | SQLite | PostgreSQL append-only | ~500 KB–5 MB/mês |
 | Anexos (NF, holerite) | Disco `uploads/` | Object storage privado | 2–20 GB/ano |
 | Modelo ML (`.pkl`) | Arquivo no servidor | Artefato versionado por release | < 5 MB |
-| Snapshot demo (Netlify) | `demoSnapshot.json` | Não usar em produção | ~1 MB |
+| Snapshot demo (Netlify) | `/demoSnapshot.json` (pasta `public/`) | Não usar em produção | ~1 MB |
 
 ### 3.2 Dimensionamento inicial (3–10 clientes PME)
 
@@ -175,7 +175,7 @@ Preços de referência: [02 — Modelo de negócios](02-modelo-de-negocios-e-pre
 | Prova técnica | Mostrar PAY-XXXXXX, fraude ML, devolução | Catálogo MBA no seed |
 | Proposta | Plano + setup + DPA | [02 — Precificação](02-modelo-de-negocios-e-precificacao.md) |
 
-**Demo online:** Netlify (`VITE_DEMO_MODE=true`) — mesmos KPIs do local via `demoSnapshot.json`.  
+**Demo online:** Netlify (`VITE_DEMO_MODE=true`) — mesmos KPIs do local via `/demoSnapshot.json` (96/110/24).  
 **Demo com IA real:** backend local ou API hospedada + `VITE_API_URL`.
 
 ### Fase 2 — Piloto (30 dias)

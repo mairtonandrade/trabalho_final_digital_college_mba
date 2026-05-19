@@ -9,7 +9,8 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 | Recurso | Link |
 |---------|------|
 | **Guia mestre (por onde começar)** | [`docs/00-guia-mestre.md`](docs/00-guia-mestre.md) |
-| Índice da documentação | [`docs/README.md`](docs/README.md) |
+| Índice completo da documentação | [`docs/12-indice-documentacao.md`](docs/12-indice-documentacao.md) |
+| Índice da pasta docs | [`docs/README.md`](docs/README.md) |
 | Planejamento | [`docs/01-planejamento.md`](docs/01-planejamento.md) |
 | Arquitetura | [`docs/02-arquitetura.md`](docs/02-arquitetura.md) |
 | Fluxo de IA | [`docs/03-fluxo-ia.md`](docs/03-fluxo-ia.md) |
@@ -80,9 +81,10 @@ Na home, escolha o perfil:
 Ao subir o backend, o seed carrega automaticamente:
 
 - Cadastros base (contas, fornecedores, colaboradores)
-- **~25 remessas** com histórico de ~6 meses
-- **~90 pagamentos** com análises IA versionadas
-- **1 remessa aguardando gerente** para demo ao vivo
+- **27 remessas** com histórico de ~6 meses
+- **96 pagamentos** com IA analisada (KPI Diretoria)
+- **110 execuções IA** · **24 fraudes ML** (ver [mapa demo](docs/07-mapa-dados-demo.md))
+- Remessa **Catálogo MBA** aguardando gerente para demo ao vivo
 
 Para resetar lançamentos mantendo cadastros: `POST /api/admin/limpar-lancamentos`  
 Para banco zerado: pare o servidor, apague `backend/data/pagamentos.db` e reinicie.
@@ -98,13 +100,11 @@ Detalhes: [`docs/03-fluxo-ia.md`](docs/03-fluxo-ia.md)
 
 ## Deploy Netlify (frontend)
 
-O repositório inclui `netlify.toml`. Configure:
+Padrão do repo: **modo demo** (`VITE_DEMO_MODE=true`) com histórico completo via `/demoSnapshot.json` — sem backend.
 
-```
-VITE_API_URL=https://sua-api-publica.com
-```
+Passo a passo e opções de deploy: [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md)
 
-Passo a passo: [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md)
+Para API real em produção, defina no painel Netlify: `VITE_API_URL=https://sua-api-publica.com` e `VITE_DEMO_MODE=false`.
 
 ## Estrutura do repositório
 
@@ -112,7 +112,8 @@ Passo a passo: [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md)
 ├── frontend/          # UI React
 ├── backend/           # API FastAPI
 ├── ai_models/         # Treino ML
-├── docs/              # Documentação + imagens
+├── docs/              # Documentação + imagens + comercial-saas/
+├── scripts/           # export demo, screenshots, verify
 ├── netlify.toml
 └── Planejamento_Projeto_Aprovacao_Pagamentos.md
 ```

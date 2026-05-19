@@ -12,7 +12,8 @@ Mapa para **entender o projeto inteiro**: do treinamento do modelo ao uso do fro
 | **Usuário do sistema** | [GUIA_UTILIZACAO.md](../GUIA_UTILIZACAO.md) | [05-apresentacao](05-apresentacao.md), [07-mapa-dados-demo](07-mapa-dados-demo.md) |
 | **Desenvolvedor novo no repo** | [02-arquitetura](02-arquitetura.md) → [09-backend](09-construcao-backend.md) → [10-frontend](10-construcao-frontend.md) | [03-fluxo-ia](03-fluxo-ia.md), [04-deploy-netlify](04-deploy-netlify.md) |
 | **Cientista de dados / ML** | [modelo-ia/08](modelo-ia/08-vinculo-treinamento-e-runtime.md) | [01-treinamento](modelo-ia/01-treinamento-do-modelo.md), [03-dicionario](modelo-ia/03-dicionario-de-deteccoes.md) |
-| **Produto / comercial** | [comercial-saas/](comercial-saas/README.md) | [11-objetivos](11-como-objetivos-sao-alcancados.md) |
+| **Produto / comercial** | [comercial-saas/08](comercial-saas/08-plano-disponibilizacao-para-cliente-final.md) | [comercial-saas/](comercial-saas/README.md), [11-objetivos](11-como-objetivos-sao-alcancados.md) |
+| **Manutenção da documentação** | [12-indice](12-indice-documentacao.md) | Este guia (00) |
 | **Auditor / compliance** | [11-objetivos](11-como-objetivos-sao-alcancados.md) (WORM, dupla aprovação) | [modelo-ia/04](modelo-ia/04-processo-completo-ia.md), [06-catalogo-fraudes](06-catalogo-fraudes.md) |
 
 ---
@@ -54,7 +55,8 @@ flowchart TD
 | Atuação do modelo em runtime | `modelo-ia/08`, `04` | Alto |
 | Catálogo de detecções | `06-catalogo-fraudes`, `modelo-ia/03` | Alto |
 | Fluxo de negócio (3 perfis) | `GUIA`, `05-apresentacao`, assets `06-fluxo` | Alto |
-| Deploy Netlify + demo | `04-deploy-netlify` | Médio |
+| Deploy Netlify + demo | `04-deploy-netlify`, `07-mapa-dados-demo` | Alto |
+| Índice e coerência dos docs | `12-indice-documentacao` | Alto |
 | Plano SaaS futuro | `comercial-saas/*` | Alto (produto futuro) |
 | Métricas e KPIs demo | `07-mapa-dados-demo`, `modelo-ia/02` | Médio |
 
@@ -98,14 +100,17 @@ docs/
 ├── 07-mapa-dados-demo.md
 ├── 09-construcao-backend.md     ← novo
 ├── 10-construcao-frontend.md    ← novo
-├── 11-como-objetivos-sao-alcancados.md  ← novo
+├── 11-como-objetivos-sao-alcancados.md
+├── 12-indice-documentacao.md  ← inventário e coerência
 ├── assets/                    ← screenshots
+├── apresentacoes/             ← Pitch Deck PDF
 ├── modelo-ia/                 ← ML completo
-└── comercial-saas/            ← negócio / produção
+└── comercial-saas/            ← negócio / produção (comece pelo 08)
 
 Raiz:
 ├── README.md                  ← início rápido
 ├── GUIA_UTILIZACAO.md         ← manual do usuário
+├── scripts/                   ← export demo, verify, screenshots
 └── Planejamento_Projeto_*.md  ← documento acadêmico original
 ```
 
@@ -121,4 +126,6 @@ Raiz:
 | Como subo local? | [README.md](../README.md) |
 | Como a Diretoria vê fraudes? | [07-mapa-dados-demo](07-mapa-dados-demo.md) |
 | Dupla aprovação está onde? | [11-objetivos](11-como-objetivos-sao-alcancados.md) |
-| Vender para várias empresas? | [comercial-saas/](comercial-saas/README.md) |
+| Vender para várias empresas? | [comercial-saas/08](comercial-saas/08-plano-disponibilizacao-para-cliente-final.md) |
+| Onde está cada documento? | [12-indice-documentacao](12-indice-documentacao.md) |
+| Netlify sem dados completos? | [04-deploy-netlify](04-deploy-netlify.md) — deploy sem cache + `/demoSnapshot.json` |

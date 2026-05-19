@@ -154,4 +154,6 @@ Cada execução incrementa `versao` em `PagamentoAnaliseIA` — o histórico **n
 
 ## Modo demonstração (Netlify)
 
-Sem backend, o frontend usa `demoResolver` com dados estáticos — o **processo lógico** é o mesmo, mas sem XGBoost real em runtime. Para validar o modelo de verdade, use backend local ou API hospedada com `VITE_API_URL`.
+Sem backend, o frontend carrega `frontend/public/demoSnapshot.json` (mesmos **96 / 110 / 24** KPIs do seed) e mocka a API via `demoResolver.ts`. O **processo lógico** na UI é o mesmo; o XGBoost **não** roda em runtime no browser.
+
+Para validar o modelo de verdade: backend local ou API hospedada com `VITE_API_URL`. Ver [07-mapa-dados-demo](../07-mapa-dados-demo.md) e [04-deploy-netlify](../04-deploy-netlify.md).

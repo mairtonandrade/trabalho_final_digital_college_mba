@@ -25,6 +25,7 @@
 | [09 — Construção backend](09-construcao-backend.md) | Routers, services, fluxo enviar remessa |
 | [10 — Construção frontend](10-construcao-frontend.md) | Páginas, componentes, API client |
 | [11 — Objetivos alcançados](11-como-objetivos-sao-alcancados.md) | Problema → funcionalidade → código → validação |
+| [**12 — Índice e coerência**](12-indice-documentacao.md) | **Inventário de toda a documentação e regras de manutenção** |
 
 ### Plano comercial e operação SaaS
 

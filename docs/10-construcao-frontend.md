@@ -23,9 +23,12 @@ frontend/src/
 ├── context/
 │   └── RoleContext.tsx   # Perfil demo (localStorage mba_role)
 ├── api/
-│   ├── client.ts         # apiClient.* métodos REST
-│   ├── apiConfig.ts      # isDemoMode() para Netlify
-│   └── demoResolver.ts   # Dados estáticos sem backend
+│   ├── client.ts           # apiClient.* métodos REST
+│   ├── apiConfig.ts        # isDemoMode() para Netlify
+│   ├── demoSnapshotData.ts # carrega /demoSnapshot.json
+│   └── demoResolver.ts     # mock da API em modo demo
+├── public/
+│   └── demoSnapshot.json   # seed exportado (96/110/24 KPIs)
 ├── pages/
 │   ├── Home.tsx          # Escolha de perfil
 │   ├── Analista.tsx      # Remessas, cadastros, contas
@@ -64,9 +67,15 @@ frontend/src/
 | Dashboard | `kpis`, `metricasIA`, `historicoControleIA` |
 | Cadastros | fornecedores, colaboradores |
 
-**Modo demo (Netlify):** se `isDemoMode()` → adapter mock em `demoResolver.ts` (sem backend).
+**Modo demo (Netlify):**
 
-**Produção local:** proxy Vite `/api` → `localhost:8000` ou `VITE_API_URL`.
+1. `main.tsx` chama `initDemoSnapshot()` → fetch `/demoSnapshot.json`
+2. `client.ts` usa adapter que delega a `demoResolver.ts`
+3. Badge no `Layout.tsx` confirma KPIs carregados
+
+Regenerar snapshot: `python scripts/export_demo_snapshot.py` (raiz do repo).
+
+**Produção local:** proxy Vite `/api` → `localhost:8000` ou `VITE_API_URL` no `.env`.
 
 ---
 

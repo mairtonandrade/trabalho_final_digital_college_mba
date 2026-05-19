@@ -38,3 +38,4 @@ Guia para **disponibilizar o produto a vários clientes finais** com segurança,
 | Arquitetura atual | [02-arquitetura.md](../02-arquitetura.md) |
 | Modelo de IA | [modelo-ia/](../modelo-ia/README.md) |
 | Deploy frontend | [04-deploy-netlify.md](../04-deploy-netlify.md) |
+| Índice de toda a documentação | [12-indice-documentacao.md](../12-indice-documentacao.md) |
