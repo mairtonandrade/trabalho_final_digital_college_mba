@@ -1,4 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
+import { isDemoMode } from '../api/apiConfig'
+import { demoSnapshotMeta } from '../api/demoSnapshotData'
 import { useRole } from '../context/RoleContext'
 
 const roleLabels: Record<string, string> = {
@@ -32,6 +34,7 @@ export default function Layout({
   const { role, setRole } = useRole()
   const location = useLocation()
   const nav = role ? navByRole[role] : []
+  const demoMeta = isDemoMode() ? demoSnapshotMeta() : null
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -49,6 +52,13 @@ export default function Layout({
                 <p className="text-sm text-slate-200 group-hover:text-white transition">
                   {title}
                 </p>
+                {demoMeta && (
+                  <p className="text-[10px] text-emerald-500/90 mt-0.5">
+                    Demo {demoMeta.kpis_diretoria_esperados.pagamentos_analisados} pag. ·{' '}
+                    {demoMeta.kpis_diretoria_esperados.execucoes_ia} IA ·{' '}
+                    {demoMeta.kpis_diretoria_esperados.fraudes_ml} fraudes
+                  </p>
+                )}
               </div>
             </Link>
 

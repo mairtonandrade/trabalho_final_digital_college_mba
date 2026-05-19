@@ -5,8 +5,10 @@
 ### Perfis redirecionam para a home ou tela escura
 
 1. **Build antigo em cache** — no painel Netlify: *Deploys* → *Trigger deploy* → **Clear cache and deploy site**.
-2. **Modo demo** — o `netlify.toml` define `VITE_DEMO_MODE=true` para funcionar sem backend. Os KPIs vêm de `frontend/src/api/demoSnapshot.json` (mesmos 96 / 110 / 24 do seed local).
-3. **Rotas SPA** — `/* → /index.html` (200) em `netlify.toml` e `frontend/public/_redirects`.
+2. **Modo demo** — o `netlify.toml` define `VITE_DEMO_MODE=true` para funcionar sem backend. Os KPIs vêm de `/demoSnapshot.json` (mesmos 96 / 110 / 24 do seed local). No header da app aparece `Demo 96 pag. · 110 IA · 24 fraudes` quando o snapshot carregou.
+3. **Publicar o deploy** — após build, clique em **Publish deploy** se o painel Netlify mostrar essa opção (senão a produção continua no bundle antigo).
+4. **Cache** — use *Clear cache and deploy site* se os números não mudarem; depois Ctrl+F5 no navegador.
+5. **Rotas SPA** — `/* → /index.html` (200) em `netlify.toml` e `frontend/public/_redirects`.
 
 ### API retorna HTML em vez de JSON
 

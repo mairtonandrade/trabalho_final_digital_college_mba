@@ -1,5 +1,6 @@
 import axios, { type InternalAxiosRequestConfig } from 'axios'
 import { isDemoMode } from './apiConfig'
+import { initDemoSnapshot } from './demoSnapshotData'
 import { resolveDemoResponse } from './demoResolver'
 
 const api = axios.create({
@@ -27,14 +28,16 @@ api.interceptors.response.use(
 )
 
 if (isDemoMode()) {
-  api.defaults.adapter = (config: InternalAxiosRequestConfig) =>
-    Promise.resolve({
+  api.defaults.adapter = async (config: InternalAxiosRequestConfig) => {
+    await initDemoSnapshot()
+    return {
       data: resolveDemoResponse(config),
       status: 200,
       statusText: 'OK',
       headers: { 'content-type': 'application/json' },
       config,
-    })
+    }
+  }
 }
 
 export interface ContaBancaria {

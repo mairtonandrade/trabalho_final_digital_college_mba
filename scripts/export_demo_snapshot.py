@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 BACKEND = ROOT / "backend"
 sys.path.insert(0, str(BACKEND))
 
-OUT_PATH = ROOT / "frontend" / "src" / "api" / "demoSnapshot.json"
+OUT_PATH = ROOT / "frontend" / "public" / "demoSnapshot.json"
 
 
 def _json_default(obj):

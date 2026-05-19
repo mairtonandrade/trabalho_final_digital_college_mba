@@ -75,7 +75,7 @@ A remessa **“Catálogo MBA — Todos os tipos de detecção IA”** concentra 
 - O modelo é **assistivo** — decisão humana (gerente) é obrigatória.
 - Treino sintético/Kaggle **não substitui** dados reais da empresa sem validação.
 - GenAI pode operar em **modo template** sem Ollama — parecer ainda é gerado.
-- Netlify em modo demo usa `frontend/src/api/demoSnapshot.json`, exportado do mesmo seed (`python scripts/export_demo_snapshot.py`).
+- Netlify em modo demo usa `frontend/public/demoSnapshot.json`, exportado do mesmo seed (`python scripts/export_demo_snapshot.py`).
 
 ## Como validar após mudanças
 

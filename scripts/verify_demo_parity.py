@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SNAPSHOT = ROOT / "frontend" / "src" / "api" / "demoSnapshot.json"
+SNAPSHOT = ROOT / "frontend" / "public" / "demoSnapshot.json"
 
 
 def main() -> int:

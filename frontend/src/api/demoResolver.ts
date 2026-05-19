@@ -1,8 +1,8 @@
 import type { InternalAxiosRequestConfig } from 'axios'
 import type { Colaborador, ColaboradorDetalhe, Fornecedor, FornecedorDetalhe } from './client'
 import {
-  DEMO_SNAPSHOT,
   findPagamentoDemo,
+  getDemoSnapshot,
   historicoControleDemo,
   remessasDemo,
 } from './demoSnapshotData'
@@ -80,8 +80,9 @@ export function resolveDemoResponse(config: InternalAxiosRequestConfig): unknown
   const status = params.status as string | undefined
 
   if (url.includes('/health')) return { status: 'ok', modo: 'demonstracao' }
-  if (url.endsWith('/contas') && !url.includes('/movimentos')) return DEMO_SNAPSHOT.contas
-  if (url.includes('/movimentos')) return DEMO_SNAPSHOT.movimentos
+  const snap = getDemoSnapshot()
+  if (url.endsWith('/contas') && !url.includes('/movimentos')) return snap.contas
+  if (url.includes('/movimentos')) return snap.movimentos
   if (url.includes('/fornecedores/ativos')) return FORN.filter((f) => f.status === 'ativo')
   if (url.match(/\/fornecedores\/\d+$/)) {
     const f = FORN.find((x) => url.includes(String(x.id))) || FORN[0]
@@ -121,19 +122,19 @@ export function resolveDemoResponse(config: InternalAxiosRequestConfig): unknown
     const id = parseInt(url.split('/').pop() || '0', 10)
     return findPagamentoDemo(id) || findPagamentoDemo(91)
   }
-  if (url.includes('/dashboard/kpis')) return DEMO_SNAPSHOT.kpis
-  if (url.includes('/dashboard/auditoria')) return DEMO_SNAPSHOT.auditoria
-  if (url.includes('/metricas-ia')) return DEMO_SNAPSHOT.metricasIA
+  if (url.includes('/dashboard/kpis')) return snap.kpis
+  if (url.includes('/dashboard/auditoria')) return snap.auditoria
+  if (url.includes('/metricas-ia')) return snap.metricasIA
   if (url.includes('/historico-controle-ia')) {
     const limit = Math.min(Number(params.limit) || 150, 300)
     return historicoControleDemo(limit)
   }
-  if (url.includes('/deteccoes-ia')) return DEMO_SNAPSHOT.deteccoesIA
-  if (url.includes('/pontos-atencao')) return DEMO_SNAPSHOT.pontosAtencao
-  if (url.includes('/pagamentos-nao-cadastrados')) return DEMO_SNAPSHOT.pagamentosNaoCadastrados
-  if (url.includes('/pagamentos-pf-nao-cadastrados')) return DEMO_SNAPSHOT.pagamentosPFNaoCadastrados
+  if (url.includes('/deteccoes-ia')) return snap.deteccoesIA
+  if (url.includes('/pontos-atencao')) return snap.pontosAtencao
+  if (url.includes('/pagamentos-nao-cadastrados')) return snap.pagamentosNaoCadastrados
+  if (url.includes('/pagamentos-pf-nao-cadastrados')) return snap.pagamentosPFNaoCadastrados
   if (url.includes('/ml/status')) return { modelo_disponivel: true, modo: 'demonstracao' }
-  if (url.includes('/alertas')) return DEMO_SNAPSHOT.alertas
+  if (url.includes('/alertas')) return snap.alertas
 
   if (config.method === 'post' || config.method === 'patch' || config.method === 'put') {
     if (url.includes('/remessas')) {

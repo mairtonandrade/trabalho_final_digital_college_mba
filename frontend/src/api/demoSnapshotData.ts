@@ -1,6 +1,6 @@
 /**
- * Snapshot exportado do seed do backend (scripts/export_demo_snapshot.py).
- * Garante paridade local (API) x Netlify (modo demo).
+ * Snapshot do seed do backend — carregado em runtime de /demoSnapshot.json
+ * (evita bundle antigo em cache no Netlify e facilita validar o deploy).
  */
 import type {
   AuditLog,
@@ -15,7 +15,6 @@ import type {
   PontoAtencao,
   Remessa,
 } from './client'
-import raw from './demoSnapshot.json'
 
 export interface DemoSnapshot {
   meta: {
@@ -41,10 +40,48 @@ export interface DemoSnapshot {
   movimentos: MovimentoConta[]
 }
 
-export const DEMO_SNAPSHOT = raw as unknown as DemoSnapshot
+let snapshot: DemoSnapshot | null = null
+let loadPromise: Promise<DemoSnapshot> | null = null
+
+export function getDemoSnapshot(): DemoSnapshot {
+  if (!snapshot) {
+    throw new Error('demoSnapshot ainda não carregado — chame initDemoSnapshot() antes.')
+  }
+  return snapshot
+}
+
+export async function initDemoSnapshot(): Promise<DemoSnapshot> {
+  if (snapshot) return snapshot
+  if (loadPromise) return loadPromise
+
+  loadPromise = fetch(`${import.meta.env.BASE_URL}demoSnapshot.json`, { cache: 'no-store' })
+    .then(async (res) => {
+      if (!res.ok) {
+        throw new Error(`Falha ao carregar demoSnapshot.json (${res.status})`)
+      }
+      return res.json() as Promise<DemoSnapshot>
+    })
+    .then((data) => {
+      const k = data.meta?.kpis_diretoria_esperados
+      if (!k || k.pagamentos_analisados < 50) {
+        throw new Error(
+          `demoSnapshot inválido ou desatualizado (pagamentos=${k?.pagamentos_analisados ?? 0}). Rode: python scripts/export_demo_snapshot.py`
+        )
+      }
+      snapshot = data
+      return data
+    })
+
+  return loadPromise
+}
+
+export function demoSnapshotMeta(): DemoSnapshot['meta'] | null {
+  return snapshot?.meta ?? null
+}
 
 export function findPagamentoDemo(id: number): Pagamento | undefined {
-  for (const r of DEMO_SNAPSHOT.remessas) {
+  const data = getDemoSnapshot()
+  for (const r of data.remessas) {
     const p = r.pagamentos.find((x) => x.id === id)
     if (p) return p
   }
@@ -52,12 +89,13 @@ export function findPagamentoDemo(id: number): Pagamento | undefined {
 }
 
 export function remessasDemo(status?: string): Remessa[] {
-  if (status) return DEMO_SNAPSHOT.remessas.filter((r) => r.status === status)
-  return DEMO_SNAPSHOT.remessas
+  const data = getDemoSnapshot()
+  if (status) return data.remessas.filter((r) => r.status === status)
+  return data.remessas
 }
 
 export function historicoControleDemo(limit = 150): HistoricoControleIAResponse {
-  const base = DEMO_SNAPSHOT.historicoControleIA
+  const base = getDemoSnapshot().historicoControleIA
   const itens = base.itens.slice(0, Math.min(limit, 300))
   return {
     resumo: {

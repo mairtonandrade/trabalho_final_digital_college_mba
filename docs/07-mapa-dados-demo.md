@@ -45,7 +45,7 @@ Com banco recriado (`reseed_demo.py`) ou Netlify em modo demo (`demoSnapshot.jso
 
 ## Paridade local × Netlify
 
-O Netlify usa `frontend/src/api/demoSnapshot.json`, exportado do **mesmo seed** do backend:
+O Netlify usa `frontend/public/demoSnapshot.json` (servido em `/demoSnapshot.json`), exportado do **mesmo seed** do backend:
 
 ```powershell
 python scripts/export_demo_snapshot.py

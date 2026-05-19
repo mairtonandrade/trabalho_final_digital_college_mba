@@ -1,6 +1,6 @@
 [build]
   base = "frontend"
-  command = "npm ci && npm run build"
+  command = "npm ci && npm run demo:verify && npm run build"
   publish = "dist"
 
 # Modo demo obrigatório no Netlify (sem backend). Para API real, defina VITE_API_URL no painel.
