@@ -5,7 +5,7 @@
 ### Perfis redirecionam para a home ou tela escura
 
 1. **Build antigo em cache** — no painel Netlify: *Deploys* → *Trigger deploy* → **Clear cache and deploy site**.
-2. **Modo demo** — o `netlify.toml` define `VITE_DEMO_MODE=true` para funcionar sem backend.
+2. **Modo demo** — o `netlify.toml` define `VITE_DEMO_MODE=true` para funcionar sem backend. Os KPIs vêm de `frontend/src/api/demoSnapshot.json` (mesmos 96 / 110 / 24 do seed local).
 3. **Rotas SPA** — `/* → /index.html` (200) em `netlify.toml` e `frontend/public/_redirects`.
 
 ### API retorna HTML em vez de JSON

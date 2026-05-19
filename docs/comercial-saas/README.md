@@ -15,6 +15,9 @@ Guia para **disponibilizar o produto a vários clientes finais** com segurança,
 | [05 — Operação, suporte e treinamento](05-operacao-suporte-e-treinamento.md) | N1/N2, SLA, onboarding, capacitação |
 | [06 — Roadmap produto → produção](06-roadmap-produto-para-producao.md) | O que falta no código atual |
 | [07 — Implantação por cliente](07-implantacao-por-cliente.md) | Checklist de go-live (30–60 dias) |
+| [**08 — Plano para o cliente final**](08-plano-disponibilizacao-para-cliente-final.md) | **Como comercializar, multi-empresa, armazenamento, LGPD e go-to-market** |
+
+> **Comece pelo 08** se o objetivo é oferecer o produto a empresas reais; os demais documentos detalham cada dimensão.
 
 ## Resumo executivo (1 página)
 

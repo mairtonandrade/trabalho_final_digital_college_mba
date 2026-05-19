@@ -28,7 +28,8 @@
 
 ### Plano comercial e operação SaaS
 
-Pasta dedicada: **[comercial-saas/](comercial-saas/README.md)** — negócio, infra multi-cliente, segurança, suporte, treinamento e implantação.
+Pasta dedicada: **[comercial-saas/](comercial-saas/README.md)** — negócio, infra multi-cliente, segurança, suporte, treinamento e implantação.  
+**Plano para comercializar ao cliente final:** [08 — Disponibilização multi-empresa](comercial-saas/08-plano-disponibilizacao-para-cliente-final.md).
 
 ### Documentação do modelo de IA
 

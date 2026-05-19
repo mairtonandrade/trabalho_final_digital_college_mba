@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "demo:export": "python ../scripts/export_demo_snapshot.py",
+    "demo:verify": "python ../scripts/verify_demo_parity.py"
   },
   "dependencies": {
     "axios": "^1.16.1",

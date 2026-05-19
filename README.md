@@ -15,6 +15,7 @@ Sistema web de **governança de pagamentos** com dupla aprovação (Analista →
 | Fluxo de IA | [`docs/03-fluxo-ia.md`](docs/03-fluxo-ia.md) |
 | **Modelo de IA (treino, métricas, dicionário)** | [`docs/modelo-ia/`](docs/modelo-ia/README.md) |
 | **Plano SaaS (negócio, infra, suporte, LGPD)** | [`docs/comercial-saas/`](docs/comercial-saas/README.md) |
+| **Como oferecer ao cliente final (multi-empresa)** | [`docs/comercial-saas/08-plano-disponibilizacao-para-cliente-final.md`](docs/comercial-saas/08-plano-disponibilizacao-para-cliente-final.md) |
 | Deploy Netlify | [`docs/04-deploy-netlify.md`](docs/04-deploy-netlify.md) |
 | Roteiro de apresentação | [`docs/05-apresentacao.md`](docs/05-apresentacao.md) |
 | Pitch Deck (PDF) | [`docs/apresentacoes/Guardiao-de-Pagamentos-Pitch-Deck.pdf`](docs/apresentacoes/Guardiao-de-Pagamentos-Pitch-Deck.pdf) |

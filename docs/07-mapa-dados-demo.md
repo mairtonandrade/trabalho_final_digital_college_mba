@@ -30,6 +30,29 @@ cd backend
 .\venv_mba\Scripts\uvicorn.exe app.main:app --reload --port 8000
 ```
 
-## Netlify (modo demo)
+## KPIs da Diretoria (seed padrão)
 
-Sem `VITE_API_URL`, o frontend usa `demoResolver.ts` com os mesmos tipos de dados (auditoria, detecções, saldos).
+Com banco recriado (`reseed_demo.py`) ou Netlify em modo demo (`demoSnapshot.json`):
+
+| Indicador | Valor |
+|-----------|-------|
+| Pagamentos analisados (IA) | **96** |
+| Execuções IA | **110** |
+| Fraudes ML | **24** |
+| PJ não cadastrados | **9** |
+| PF não cadastradas | **6** |
+| Valor analisado (histórico) | ~**R$ 5,81 mi** |
+
+## Paridade local × Netlify
+
+O Netlify usa `frontend/src/api/demoSnapshot.json`, exportado do **mesmo seed** do backend:
+
+```powershell
+python scripts/export_demo_snapshot.py
+cd frontend
+npm run demo:verify
+```
+
+Após alterar `seed_demo_historico.py` ou `seed_catalogo_fraude.py`, rode o export e faça commit do JSON.
+
+**Local com API:** `VITE_API_URL` no `.env` (proxy `/api` → uvicorn). Se os números divergirem, recrie o banco com `backend/scripts/reseed_demo.py`.
